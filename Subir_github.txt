@@ -1,7 +1,6 @@
-
-
-
---Subir al github:
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-- Subir el codigo al github:
 
 git add .
 
@@ -9,4 +8,8 @@ git commit -m "Subo estructura completa del proyecto PASANTIAS-USGP"
 
 git push -u origin main
 
---
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+-- Sincronizar el codigo con los demas :V
+
+git pull --rebase
