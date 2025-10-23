@@ -1,0 +1,12 @@
+
+
+
+--Subir al github:
+
+git add .
+
+git commit -m "Subo estructura completa del proyecto PASANTIAS-USGP"
+
+git push -u origin main
+
+--
