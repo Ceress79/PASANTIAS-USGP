@@ -1,0 +1,193 @@
+-- ======================================================
+-- 🌐 BASE DE DATOS: usgpcommerce
+-- ======================================================
+CREATE DATABASE IF NOT EXISTS usgpcommerce
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE usgpcommerce;
+
+-- ======================================================
+-- 👤 Tabla: users (Usuarios normales y administradores)
+-- ======================================================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) CHARACTER SET ascii NOT NULL UNIQUE,  -- UUID v4
+    cedula VARCHAR(20) DEFAULT NULL,
+    nombres VARCHAR(150) NOT NULL,
+    apellidos VARCHAR(150) NOT NULL,
+    email VARCHAR(200) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('USER','ADMIN') NOT NULL DEFAULT 'USER',
+    estado_cuenta ENUM('NO_CREADA','CREADA','BLOQUEADA') NOT NULL DEFAULT 'NO_CREADA',
+    telefono VARCHAR(30) DEFAULT NULL,
+    provincia VARCHAR(100) DEFAULT NULL,
+    ciudad VARCHAR(100) DEFAULT NULL,
+    fecha_nacimiento DATE DEFAULT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_cedula (cedula)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ======================================================
+-- 🗂️ Tabla: categorias (Categorías de productos)
+-- ======================================================
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre ENUM('ROPA','PAPELERIA','HOGAR','OTROS') NOT NULL UNIQUE,
+    descripcion TEXT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 🛍️ Tabla: productos
+-- ======================================================
+CREATE TABLE productos (
+    id CHAR(36) CHARACTER SET ascii PRIMARY KEY,     -- UUID v4
+    sku VARCHAR(60) UNIQUE,
+    nombre VARCHAR(200) NOT NULL,
+    slug VARCHAR(200) UNIQUE,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    categoria_id INT NULL,
+    disponible BOOLEAN NOT NULL DEFAULT TRUE,
+    stock_total INT NOT NULL DEFAULT 0,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 👕 Tabla: variantes (Tallas o versiones del producto)
+-- ======================================================
+CREATE TABLE variantes (
+    id CHAR(36) CHARACTER SET ascii PRIMARY KEY,
+    producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    talla ENUM('S','M','L','XL') NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 🖼️ Tabla: fotos (Imágenes de usuarios, productos o banners)
+-- ======================================================
+CREATE TABLE fotos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo ENUM('USUARIO','PRODUCTO','BANNER') NOT NULL DEFAULT 'PRODUCTO',
+    user_uuid CHAR(36) CHARACTER SET ascii NULL,
+    producto_id CHAR(36) CHARACTER SET ascii NULL,
+    ruta VARCHAR(500) NOT NULL,
+    nombre_archivo VARCHAR(255) NULL,
+    es_perfil BOOLEAN DEFAULT FALSE,
+    peso_kb INT NULL,
+    tipo_mime VARCHAR(80) DEFAULT 'image/jpeg',
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_uuid) REFERENCES users(uuid) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 📦 Tabla: orders (Pedidos)
+-- ======================================================
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_uuid CHAR(36) CHARACTER SET ascii NOT NULL UNIQUE,
+    user_id INT NOT NULL,
+    total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    estado ENUM('PENDIENTE','PAGADO','ENVIADO','COMPLETADO','CANCELADO') NOT NULL DEFAULT 'PENDIENTE',
+    direccion_envio TEXT NULL,
+    telefono_envio VARCHAR(50) NULL,
+    metodo_pago VARCHAR(80) NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 🧾 Tabla: order_items (Productos dentro de un pedido)
+-- ======================================================
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    nombre_producto VARCHAR(250) NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    cantidad INT NOT NULL DEFAULT 1,
+    subtotal DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 📈 Tabla: inventory_movements (Registro de movimientos de stock)
+-- ======================================================
+CREATE TABLE inventory_movements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    tipo ENUM('INGRESO','SALIDA','AJUSTE') NOT NULL,
+    cantidad INT NOT NULL,
+    nota VARCHAR(255) NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 🛡️ Tabla: admin_sessions (Sesiones administrativas)
+-- ======================================================
+CREATE TABLE admin_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expira_en DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
+-- 📚 Datos de ejemplo
+-- ======================================================
+INSERT INTO categorias (nombre, descripcion) VALUES
+  ('ROPA', 'Ropa y accesorios con diseños precolombinos'),
+  ('PAPELERIA', 'Cuadernos, libretas y artículos escolares'),
+  ('HOGAR', 'Decoración y artículos para el hogar');
+
+-- Usuario administrador (recuerda reemplazar el hash)
+INSERT INTO users (uuid, cedula, nombres, apellidos, email, password_hash, role, estado_cuenta)
+VALUES ('00000000-0000-4000-8000-000000000001', '9999999999', 'Admin', 'USGP', 'admin@usgp.edu.ec',
+        'REPLACE_WITH_BCRYPT_HASH', 'ADMIN', 'CREADA');
+
+-- Usuario de prueba
+INSERT INTO users (uuid, cedula, nombres, apellidos, email, password_hash, role)
+VALUES (UUID(), '0102030405', 'Juan', 'Pérez', 'juan.perez@example.com', 'REPLACE_WITH_BCRYPT_HASH_2', 'USER');
+
+-- Ejemplo: Banner dinámico
+INSERT INTO fotos (tipo, ruta, nombre_archivo, es_perfil)
+VALUES 
+('BANNER', '/fotos/banners/banner_inicio.jpg', 'banner_inicio.jpg', TRUE),
+('BANNER', '/fotos/banners/oferta_navidad.jpg', 'oferta_navidad.jpg', FALSE);
+
+-- Índices útiles
+CREATE INDEX idx_productos_categoria ON productos(categoria_id);
+CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
+CREATE INDEX idx_orders_user ON orders(user_id);
+
+
+
+
+-- ======================================================
+-- USUARIO ADMINISTRADOR 
+-- ======================================================
+
+INSERT INTO users (
+  uuid, cedula, nombres, apellidos, email, password_hash, role, estado_cuenta
+) VALUES (
+  UUID(),
+  '0000000000',
+  'Admin',
+  'Principal',
+  'admin',
+  'admin123',
+  'ADMIN',
+  'CREADA'
+);

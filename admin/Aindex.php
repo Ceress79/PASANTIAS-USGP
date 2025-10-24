@@ -1,17 +1,17 @@
- <?php
-// Aquí podrías poner validaciones de sesión, ejemplo:
-// session_start();
-// if (!isset($_SESSION['admin'])) {
-//     header("Location: ../login.php");
-//     exit();
-// }
+<?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: Alogin.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración</title>
+    <title>Panel de Administración - USGP</title>
     <link rel="stylesheet" href="css/admin.css">
     <script src="js/admin.js" defer></script>
 </head>
@@ -19,7 +19,9 @@
     <div class="admin-container">
         <!-- Menú lateral -->
         <aside class="sidebar">
-            <h2>Admin</h2>
+            <div class="logo-container">
+                <img src="../style/img/logo.png" alt="Logo USGP" class="logo">
+            </div>
             <nav>
                 <ul>
                     <li><a href="#">📁 Subir fotos</a></li>
@@ -27,7 +29,7 @@
                     <li><a href="#">👤 Usuarios</a></li>
                     <li><a href="#">📊 Reportes</a></li>
                     <li><a href="#">⚙️ Configuración</a></li>
-                    <li><a href="#">🚪 Cerrar sesión</a></li>
+                    <li><a href="logout.php">🚪 Cerrar sesión</a></li>
                 </ul>
             </nav>
         </aside>
@@ -57,3 +59,4 @@
     </div>
 </body>
 </html>
+
