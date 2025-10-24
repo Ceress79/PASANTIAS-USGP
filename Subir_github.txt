@@ -13,3 +13,5 @@ git push -u origin main
 -- Sincronizar el codigo con los demas :V
 
 git pull --rebase
+
+xd
