@@ -1,0 +1,93 @@
+/* --- Estructura general --- */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #f5f6fa;
+    display: flex;
+    height: 100vh;
+}
+
+/* --- Contenedor principal --- */
+.admin-container {
+    display: flex;
+    width: 100%;
+}
+
+/* --- Menú lateral --- */
+.sidebar {
+    width: 220px;
+    background: #2d1e27;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 22px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: #bbb;
+    display: block;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+    background: #27293d;
+    color: #fff;
+}
+
+/* --- Contenido principal --- */
+.main-content {
+    flex: 1;
+    padding: 20px 40px;
+    overflow-y: auto;
+}
+
+/* --- Header --- */
+.admin-header {
+    background: #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.admin-header h1 {
+    margin: 0;
+}
+
+/* --- Tarjetas del panel --- */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}

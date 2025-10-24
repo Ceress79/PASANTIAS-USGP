@@ -1,0 +1,171 @@
+/* --- Reseteo y Estilos Globales --- */
+
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #F2F2F2;
+    color: #333;
+}
+
+h1, h2 {
+    font-weight: 500;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Encabezado --- */
+.top-bar {
+    background-color: #B51E35;
+    padding: 10px 0;
+}
+
+.logo {
+    height: 50px;
+}
+
+.main-nav {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+}
+
+.main-nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 10px 0;
+}
+
+.main-nav a:hover {
+    color: #B51E35;
+}
+
+.cart-icon {
+    font-size: 20px;
+}
+
+/* --- Sección Hero (Banner principal) --- */
+.hero-section {
+    /* RUTA CORREGIDA */
+    background-image: url('../img/baner.png');
+    background-size: cover;
+    background-position: center;
+    height: 550px;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background-color: rgba(30, 30, 30, 0.4);
+}
+
+.hero-text {
+    padding: 20px;
+    max-width: 450px;
+}
+
+.hero-text h1 {
+    color: #fff;
+    font-size: 28px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* --- Contenido Principal de la Página --- */
+.page-content {
+    padding: 50px 0;
+}
+
+/* --- Sección de Productos --- */
+.products-section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
+}
+
+.products-section h2 {
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.category-subtitle {
+    margin-top: 0;
+    color: #555;
+    font-size: 18px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.product-card {
+    background-color: #E6E6E6;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+/* --- Sección "Nosotros" --- */
+.about-section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text h2 {
+    font-size: 32px;
+}
+
+.about-text p {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+.about-image {
+    flex: 1;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+

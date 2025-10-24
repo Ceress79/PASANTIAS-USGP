@@ -1,0 +1,37 @@
+/* Estilos para el footer completo */
+.site-footer {
+    /* 1. Apariencia y Color */
+    background-color: #878786; /* Color gris proporcionado */
+    color: #ffffff;            /* Texto en color blanco */
+    font-family: Arial, sans-serif; /* Fuente estándar para claridad */
+    
+    /* 2. Diseño y Posición */
+    width: 100%;               /* Ocupa el 100% del ancho del contenedor */
+    box-sizing: border-box;    /* Importante para que el padding no añada ancho extra */
+    
+    /* 3. Estabilidad (para que no se rompa/desborde) */
+    /* Se utiliza Flexbox o Grids dentro de .footer-content para manejar la disposición,
+       pero el footer principal solo necesita asegurar su ancho y padding. */
+}
+
+/* Contenedor interno para el texto */
+.footer-content {
+    /* Centrar o limitar el ancho si es necesario, pero manteniendo el texto a la izquierda */
+    max-width: 1200px; /* Ancho máximo para el contenido, ajústalo según tu diseño */
+    margin: 0 auto;    /* Centra el contenedor interno horizontalmente */
+    padding: 20px 20px; /* Relleno superior/inferior y a los lados */
+    text-align: left;  /* Alinea todo el texto del contenido a la IZQUIERDA */
+}
+
+/* Estilos para los párrafos de texto */
+.footer-content p {
+    margin: 5px 0;             /* Espacio vertical entre líneas de texto */
+    line-height: 1.4;          /* Interlineado para mejor lectura */
+    font-size: 14px;           /* Tamaño de fuente */
+}
+
+/* Estilo para la información de resolución (si se quiere destacar o ubicar de forma diferente) */
+.resolution-info {
+    font-size: 12px;
+    margin-top: 10px;
+}
