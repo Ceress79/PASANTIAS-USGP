@@ -26,7 +26,6 @@ body {
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
 }
 
-/* --- Logo --- */
 .logo-container {
     display: flex;
     flex-direction: column;
@@ -73,7 +72,8 @@ body {
     font-weight: 500;
 }
 
-.sidebar nav ul li a:hover {
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
     background: rgba(255, 255, 255, 0.15);
     transform: translateX(5px);
 }
@@ -85,7 +85,6 @@ body {
     overflow-y: auto;
 }
 
-/* --- Header --- */
 .admin-header {
     background: #fff;
     padding: 20px 25px;
@@ -99,65 +98,290 @@ body {
     color: #B51E35;
 }
 
-.admin-header p {
-    margin: 5px 0 0;
-    color: #555;
-}
-
-/* --- Tarjetas del dashboard --- */
-.dashboard {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-}
-
-.card {
+/* --- Contenedor de gestión --- */
+.gestion-container {
     background: #fff;
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.card h3 {
-    color: #B51E35;
-    margin-bottom: 10px;
-    font-weight: 600;
+.top-bar h2 {
+    margin: 0;
+    color: #2d1e27;
 }
 
-.card p {
-    color: #555;
+/* --- Botones --- */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: #B51E35;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #96172a;
+}
+
+.btn-rojo {
+    background: #dc3545;
+    color: white;
+}
+.btn-rojo:hover {
+    background: #b42a36;
+}
+
+.btn-verde {
+    background: #28a745;
+    color: white;
+}
+.btn-verde:hover {
+    background: #1f8b38;
+}
+
+.btn-gris {
+    background: #6c757d;
+    color: white;
+}
+.btn-gris:hover {
+    background: #565e64;
+}
+
+/* --- Mensajes --- */
+.msg-error {
+    color: #b30000;
+    background: #ffe0e0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.msg-success {
+    color: #155724;
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.msg-info {
+    color: #0c5460;
+    background: #d1ecf1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* --- Tabla de banners --- */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
     font-size: 15px;
 }
 
-/* --- Responsivo --- */
+.admin-table th, .admin-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.admin-table th {
+    background: #2d1e27;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.admin-table tr:hover {
+    background-color: #f9f9f9;
+    transition: 0.2s;
+}
+
+.preview-img {
+    width: 140px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* --- Estado etiquetas --- */
+.estado {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+.estado.visible {
+    background: #d4edda;
+    color: #155724;
+}
+.estado.oculto {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* --- Responsive --- */
 @media (max-width: 768px) {
     .sidebar {
         width: 200px;
-        padding: 20px 10px;
     }
-
-    .main-content {
-        padding: 20px;
-    }
-
-    .card {
-        padding: 20px;
+    .admin-table th, .admin-table td {
+        padding: 10px;
     }
 }
-
 @media (max-width: 480px) {
     .sidebar {
-        display: none; /* Oculta el menú lateral en móviles pequeños */
-    }
-
-    .main-content {
-        padding: 15px;
+        display: none;
     }
 }
+
+
+        /* Estilo para mensajes */
+        .msg-error {
+            background: #ffe0e0;
+            color: #b20000;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .msg-success {
+            background: #e3ffe6;
+            color: #057a0b;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .msg-info {
+            background: #f0f5ff;
+            color: #003b7b;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        /* Imagen de vista previa */
+        .preview-img {
+            width: 120px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fafafa;
+        }
+
+        /* Contenedor principal de gestión */
+        .gestion-container {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar h2 {
+            color: #B51E35;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Tabla */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .admin-table th {
+            background: #f5f5f5;
+            color: #333;
+            font-weight: 600;
+        }
+        .admin-table tr:hover {
+            background: #fafafa;
+        }
+
+        .estado.visible {
+            color: #0a8a0a;
+            font-weight: 600;
+        }
+        .estado.oculto {
+            color: #b20000;
+            font-weight: 600;
+        }
+
+        /* Botones */
+        .btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .btn-primary {
+            background: #B51E35;
+            color: #fff;
+        }
+        .btn-verde {
+            background: #1e8a2f;
+            color: #fff;
+        }
+        .btn-gris {
+            background: #555;
+            color: #fff;
+        }
+        .btn-rojo {
+            background: #d63031;
+            color: #fff;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+        }
+
+        .form-subida {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .form-subida input[type="file"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #555;
+            padding: 20px;
+        }
+
+
+        

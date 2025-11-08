@@ -1,131 +1,83 @@
 <?php
+// (Aquí puedes incluir la conexión a la BD en el futuro)
 include('bases/header.php');
 ?>
 
-<main>
-    <section class="hero-section">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1>Ropa y Accesorios</h1>
-            </div>
-        </div>
-    </section>
+<link rel="stylesheet" href="style/css/ropa_accesorio.css">
 
-    <div class="page-content">
-        <section class="products-section">
-            <h2>Ropa y Accesorios</h2>
-            
-            <div class="product-grid">
-                <!-- Gorra -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/gorra.png" alt="Gorra USGP" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Gorra USGP</h3>
-                        <p class="product-price">$25.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">Añadir al carrito</button>
-                            <button class="buy-now">Comprar</button>
-                        </div>
-                    </div>
+<main>
+    <div class="product-page-container">
+        <h2>Ropa y Accesorios</h2>
+        
+        <section class="product-grid-ra">
+
+            <div class="product-card-ra">
+                <i class="fas fa-shopping-cart product-cart-icon-ra"></i>
+                
+                <div class="product-image-box-ra">
+                    <img src="style/img/vestido.png" alt="Producto de ejemplo 1">
                 </div>
                 
-                <!-- Vestido -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/vestido.png" alt="Vestido con patrones precolombinos" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
+                <div class="product-info-ra">
+                    <div>
+                        <h3 class="product-name-ra">Nombre de producto</h3>
+                        <p class="product-price-ra">$45.00</p>
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Vestido Cultural</h3>
-                        <p class="product-price">$45.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">Añadir al carrito</button>
-                            <button class="buy-now">Comprar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Cartera -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/cartera.png" alt="Cartera USGP" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Cartera Elegante</h3>
-                        <p class="product-price">$35.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">Añadir al carrito</button>
-                            <button class="buy-now">Comprar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Camiseta Polo -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/polo.png" alt="Camiseta Polo USGP" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Camiseta Polo</h3>
-                        <p class="product-price">$30.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">Añadir al carrito</button>
-                            <button class="buy-now">Comprar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Zapatos -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/zapatos.png" alt="Zapatos USGP" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Zapatos Casuales</h3>
-                        <p class="product-price">$55.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">Añadir al carrito</button>
-                            <button class="buy-now">Comprar</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Falda -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="style/img/falda.png" alt="Falda USGP" class="product-image">
-                        <div class="cart-overlay">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Falda Midi</h3>
-                        <p class="product-price">$40.00</p>
-                        <div class="product-actions">
-                            <button class="add-to-cart">No stock</button>
-                            <button class="buy-now" disabled>Comprar</button>
-                        </div>
+                    
+                    <div class="product-actions-ra">
+                        <button class="btn-ra add-cart">Añadir al carrito</button>
+                        <button class="btn-ra buy-now">Comprar</button>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
-</main>
+            <div class="product-card-ra">
+                <div class="product-image-box-ra">
+                    <img src="style/img/polo.png" alt="Producto de ejemplo 2">
+                </div>
+                
+                <div class="product-info-ra">
+                    <div>
+                        <h3 class="product-name-ra">Nombre de producto</h3>
+                        <p class="product-price-ra">$30.00</p>
+                    </div>
+                    
+                    <div class="product-actions-ra">
+                        <button class="btn-ra add-cart">Añadir al carrito</button>
+                        <button class="btn-ra no-stock" disabled>No stock</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card-ra">
+                <i class="fas fa-shopping-cart product-cart-icon-ra"></i>
+                <div class="product-image-box-ra">
+                    <img src="style/img/gorra.png" alt="Producto de ejemplo 3">
+                </div>
+                <div class="product-info-ra">
+                    <div>
+                        <h3 class="product-name-ra">Gorra USGP</h3>
+                        <p class="product-price-ra">$25.00</p>
+                    </div>
+                    <div class="product-actions-ra">
+                        <button class="btn-ra add-cart">Añadir al carrito</button>
+                        <button class="btn-ra buy-now">Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card-ra">
+                <div class="product-image-box-ra">
+                    <img src="style/img/img_ropa/mokap vestido 5 1.png" alt="Producto de ejemplo 4">
+                </div>
+                <div class="product-info-ra">
+                    <div>
+                        <h3 class="product-name-ra">Falda Midi</h3>
+                        <p class="product-price-ra">$40.00</p>
+                    </div>
+                    <div class="product-actions-ra">
+                        <button class="btn-ra add-cart no-stock" disabled>Añadir al carrito</button>
+                        <button class="btn-ra no-stock" disabled>No stock</button>
+                    </div>
+                </div>
+            </div>
+            </section> </div> </main>
 
 <?php include('bases/footer.php'); ?>

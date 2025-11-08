@@ -6,6 +6,13 @@ if (isset($_SESSION['admin_id'])) {
     header("Location: Aindex.php");
     exit();
 }
+
+// NUEVA LÓGICA DE ERRORES:
+$error_para_mostrar = null; // Variable para usar abajo
+if (isset($_SESSION['login_error'])) {
+    $error_para_mostrar = $_SESSION['login_error'];
+    unset($_SESSION['login_error']); // ¡Bórralo! para que no se muestre si recarga
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,8 +32,8 @@ if (isset($_SESSION['admin_id'])) {
                 <img src="../style/img/logo2.png" alt="Logo USGP" class="logo">
             </div>
             <h2>Panel de Administrador</h2>
-            <?php if(isset($_GET['error'])): ?>
-                <p style="color:red; margin-bottom:15px;"><?php echo htmlspecialchars($_GET['error']); ?></p>
+            <?php if($error_para_mostrar): // Si la variable tiene algo... ?>
+                <p style="color:red; margin-bottom:15px;"><?php echo htmlspecialchars($error_para_mostrar); ?></p>
             <?php endif; ?>
             <form action="acciones.php" method="POST">
                 <div class="input-group">

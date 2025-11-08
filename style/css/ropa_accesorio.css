@@ -1,0 +1,150 @@
+/* =========================================
+   ESTILOS PÁGINA ROPA Y ACCESORIOS
+   Basado en el manual de programador
+========================================= */
+
+/* Contenedor principal de la página de productos */
+.product-page-container {
+    max-width: 1200px;
+    margin: 20px auto; /* Centrado y con espacio */
+    padding: 0 20px;
+}
+
+.product-page-container h2 {
+    font-size: 2.5em; /* "Ropa y Accesorios" */
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* --- Rejilla de Productos --- */
+.product-grid-ra {
+    display: grid;
+    /* Crea columnas responsivas:
+       - Trata de que midan 320px
+       - Si no caben, se ajustan (1fr)
+       - En pantallas pequeñas, ocupan todo el ancho
+    */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px; /* Espacio entre las tarjetas */
+}
+
+/* --- Tarjeta de Producto (Card) --- */
+.product-card-ra {
+    background-color: #ffffff;
+    border-radius: 20px; /* Bordes bien redondeados */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Sombra/brillo suave */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Para el ícono del carrito */
+    overflow: hidden; /* Asegura que el ícono no se salga */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card-ra:hover {
+    transform: translateY(-5px); /* Efecto de levantar */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Icono del carrito (como en la imagen) */
+.product-cart-icon-ra {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    font-size: 1.2em;
+    color: #555;
+    z-index: 2;
+}
+
+/* Caja gris para la imagen */
+.product-image-box-ra {
+    background-color: #f0f0f0; /* Fondo gris claro */
+    border-radius: 15px; /* Bordes redondeados internos */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.product-image-box-ra img {
+    width: 100%;
+    height: 280px; /* Altura fija para las imágenes */
+    object-fit: contain; /* 'contain' para que se vea completa, 'cover' si prefieres que llene */
+    mix-blend-mode: multiply; /* Intenta quitar fondos blancos de PNGs */
+}
+
+/* Información del producto */
+.product-info-ra {
+    padding: 20px 10px 10px 10px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-name-ra {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.product-price-ra {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de botones */
+.product-actions-ra {
+    display: flex;
+    gap: 10px; /* Espacio entre botones */
+}
+
+/* Estilo de botones (como en la imagen) */
+.btn-ra {
+    flex: 1; /* Ocupan el mismo espacio */
+    padding: 12px 10px;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Botón "Añadir al carrito" y "Comprar" */
+.btn-ra.add-cart,
+.btn-ra.buy-now {
+    background-color: #8a8a8a; /* Gris oscuro */
+    color: white;
+}
+
+.btn-ra.add-cart:hover,
+.btn-ra.buy-now:hover {
+    background-color: #707070; /* Más oscuro al pasar el ratón */
+}
+
+/* Botón "No Stock" (deshabilitado) */
+.btn-ra.no-stock {
+    background-color: #d8d8d8; /* Gris claro */
+    color: #777;
+    cursor: not-allowed;
+}
+
+.btn-ra.add-cart.no-stock {
+    background-color: #d8d8d8;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.btn-ra.add-cart.no-stock:hover {
+    background-color: #d8d8d8; /* No cambia de color */
+}

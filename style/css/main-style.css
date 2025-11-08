@@ -3,7 +3,7 @@
 body {
     margin: 0;
     font-family: 'Corbel';
-    background-color: #F2F2F2;
+    background-color: #EBEBEB;
     color: #333;
 }
 
@@ -65,7 +65,6 @@ h1, h2 {
 /* --- Sección Hero (Banner principal) --- */
 .hero-section {
     /* RUTA CORREGIDA */
-    background-image: url('../img/baner.png');
     background-size: cover;
     background-position: center;
     height: 550px;
@@ -131,12 +130,6 @@ h1, h2 {
 }
 
 
-/* --- Sección "Nosotros" --- */
-.about-section {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
 .about-content {
     display: flex;
@@ -369,3 +362,149 @@ main {
 }
 
 
+    .hero-section {
+        position: relative; /* Contenedor para el texto absoluto */
+        width: 100%;
+        overflow: hidden; /* Oculta las imágenes que no están activas */
+    }
+
+    .slider-container {
+        width: 100%;
+        height: 70vh; /* Altura del banner, ajústala */
+        position: relative;
+    }
+
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out; /* Transición suave */
+    }
+
+    .slide.active {
+        opacity: 1; /* Muestra el slide activo */
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Asegura que la imagen cubra el espacio */
+    }
+
+    /* El texto se mantiene sobre el slider */
+    .hero-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center; /* Centra el texto verticalmente */
+        background-color: rgba(0, 0, 0, 0.4); /* Sombreado para legibilidad */
+        z-index: 2; /* Asegura que el texto esté sobre las imágenes */
+    }
+
+    .hero-text {
+        /* Tus estilos para el texto */
+        color: white; 
+        max-width: 600px;
+        margin-left: 10%; /* Ajusta la posición del texto */
+    }
+/* Estilos para los puntos debajo del slider */
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    position: relative;
+    z-index: 10;
+}
+
+.slider-dots .dot {
+    width: 12px;
+    height: 12px;
+    background-color: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.slider-dots .dot.active {
+    background-color: #d11a2a; /* 🔴 Color rojo del tema */
+    transform: scale(1.2);
+}
+
+/* ================================================== */
+/* ===== NUEVO: Estilos para la sección "Nosotros" ==== */
+/* ================================================== */
+.about-section {
+    width: 100%;
+    padding: 60px 0; /* Espaciado vertical */
+    background-color: #ffffff; /* Un fondo suave */
+}
+
+
+/* --- Sección "Nosotros" --- */
+.about-section {
+    width: 90%;
+
+    margin: 0 auto;
+}
+
+.about-content {
+    display: flex;
+    flex-wrap: wrap; /* Para que en móvil se ponga uno debajo del otro */
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrado */
+    padding: 0 20px; /* Espaciado lateral */
+    gap: 30px;
+}
+
+.about-text {
+    flex: 1; /* Ocupa el espacio disponible */
+    min-width: 300px; /* Ancho mínimo antes de saltar de línea */
+}
+
+.about-text h2 {
+    font-size: 2.5em; /* Tamaño del título "Nosotros" */
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.about-text p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+    max-width: 500px; /* Ancho máximo del párrafo */
+}
+
+.about-image {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.about-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Media Query para responsiveness --- */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column; /* Apila el texto sobre la imagen */
+    }
+    .about-text {
+        text-align: center;
+    }
+    .about-text p {
+        max-width: 100%;
+    }
+}

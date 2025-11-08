@@ -80,12 +80,14 @@ CREATE TABLE fotos (
     ruta VARCHAR(500) NOT NULL,
     nombre_archivo VARCHAR(255) NULL,
     es_perfil BOOLEAN DEFAULT FALSE,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
     peso_kb INT NULL,
     tipo_mime VARCHAR(80) DEFAULT 'image/jpeg',
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE,
     FOREIGN KEY (user_uuid) REFERENCES users(uuid) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- ======================================================
 -- 📦 Tabla: orders (Pedidos)
@@ -145,33 +147,31 @@ CREATE TABLE admin_sessions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ======================================================
--- 📚 Datos de ejemplo
+-- ⚙️ Tabla: configuracion (Ajustes generales del sitio)
 -- ======================================================
-INSERT INTO categorias (nombre, descripcion) VALUES
-  ('ROPA', 'Ropa y accesorios con diseños precolombinos'),
-  ('PAPELERIA', 'Cuadernos, libretas y artículos escolares'),
-  ('HOGAR', 'Decoración y artículos para el hogar');
+CREATE TABLE configuracion (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  clave VARCHAR(100) NOT NULL UNIQUE,
+  valor TEXT NULL,
+  descripcion VARCHAR(255) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Usuario administrador (recuerda reemplazar el hash)
-INSERT INTO users (uuid, cedula, nombres, apellidos, email, password_hash, role, estado_cuenta)
-VALUES ('00000000-0000-4000-8000-000000000001', '9999999999', 'Admin', 'USGP', 'admin@usgp.edu.ec',
-        'REPLACE_WITH_BCRYPT_HASH', 'ADMIN', 'CREADA');
-
--- Usuario de prueba
-INSERT INTO users (uuid, cedula, nombres, apellidos, email, password_hash, role)
-VALUES (UUID(), '0102030405', 'Juan', 'Pérez', 'juan.perez@example.com', 'REPLACE_WITH_BCRYPT_HASH_2', 'USER');
-
--- Ejemplo: Banner dinámico
-INSERT INTO fotos (tipo, ruta, nombre_archivo, es_perfil)
+INSERT INTO configuracion (clave, valor, descripcion)
 VALUES 
-('BANNER', '/fotos/banners/banner_inicio.jpg', 'banner_inicio.jpg', TRUE),
-('BANNER', '/fotos/banners/oferta_navidad.jpg', 'oferta_navidad.jpg', FALSE);
+('about_us_text', 'Texto inicial de ejemplo para la sección Nosotros.', 'Texto mostrado en la sección Nosotros'),
+('about_us_image', 'uploads/site/default_about.png', 'Imagen mostrada en la sección Nosotros')
+ON DUPLICATE KEY UPDATE valor = VALUES(valor);
+
+
+
+
+
+
 
 -- Índices útiles
 CREATE INDEX idx_productos_categoria ON productos(categoria_id);
 CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
 CREATE INDEX idx_orders_user ON orders(user_id);
-
 
 
 
@@ -187,7 +187,7 @@ INSERT INTO users (
   'Admin',
   'Principal',
   'admin',
-  'admin123',
+  '$2y$10$w2rpNhtz1aVyB81Dpu4eVexCVhX7hHGuWdrUij8AJ3/TdkkR7qQ6G', -- hash de "admin123"
   'ADMIN',
   'CREADA'
 );
