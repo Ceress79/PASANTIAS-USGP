@@ -49,6 +49,12 @@ CREATE TABLE productos (
     nombre VARCHAR(200) NOT NULL,
     slug VARCHAR(200) UNIQUE,
     descripcion TEXT,
+    
+    -- ✅ CAMBIOS REALIZADOS (Nuevos campos del PDF):
+    material VARCHAR(150) NULL,
+    dimensiones VARCHAR(150) NULL,
+    -- ---------------------------------------------
+
     precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     categoria_id INT NULL,
     disponible BOOLEAN NOT NULL DEFAULT TRUE,
@@ -163,16 +169,10 @@ VALUES
 ON DUPLICATE KEY UPDATE valor = VALUES(valor);
 
 
-
-
-
-
-
 -- Índices útiles
 CREATE INDEX idx_productos_categoria ON productos(categoria_id);
 CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
 CREATE INDEX idx_orders_user ON orders(user_id);
-
 
 
 -- ======================================================

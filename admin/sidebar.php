@@ -8,7 +8,7 @@
             <?php $pagina_actual = basename($_SERVER['PHP_SELF']); ?>
             
             <li><a href="Abanners.php" class="<?php echo $pagina_actual == 'Abanners.php' ? 'active' : ''; ?>">Banners Inicio</a></li>
-            <li><a href="#">Subir fotos</a></li>
+            <li><a href="Aproductos.php" class="<?php echo $pagina_actual == 'Aproductos.php' ? 'active' : ''; ?>">Productos Inicio</a></li>
             <li><a href="#">Compras</a></li>
             <li><a href="#">Usuarios</a></li>
             <li><a href="#">Reportes</a></li>

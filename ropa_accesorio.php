@@ -1,83 +1,46 @@
 <?php
-// (Aquí puedes incluir la conexión a la BD en el futuro)
 include('bases/header.php');
+
+require_once "admin/db/conexion.php"; 
+
+// Consulta para traer productos de ROPA con su foto principal
+$sql = "SELECT p.*, f.ruta as foto 
+        FROM productos p 
+        LEFT JOIN fotos f ON p.id = f.producto_id AND f.es_perfil = 1 
+        JOIN categorias c ON p.categoria_id = c.id 
+        WHERE c.nombre = 'ROPA' AND p.disponible = 1
+        ORDER BY p.creado_en DESC";
+$stmt = $pdo->query($sql);
+$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <link rel="stylesheet" href="style/css/ropa_accesorio.css">
 
-<main>
-    <div class="product-page-container">
-        <h2>Ropa y Accesorios</h2>
-        
-        <section class="product-grid-ra">
+<div class="contenedor-titulo">
+    <h2>Ropa y Accesorios</h2>
+</div>
 
-            <div class="product-card-ra">
-                <i class="fas fa-shopping-cart product-cart-icon-ra"></i>
+<div class="productos-grid">
+    <?php foreach ($productos as $prod): ?>
+        <div class="producto-card">
+            
+            <a href="producto_detalle.php?slug=<?php echo $prod['slug']; ?>" class="img-container">
+                <img src="<?php echo !empty($prod['foto']) ? $prod['foto'] : 'style/img/placeholder.png'; ?>" 
+                     alt="<?php echo htmlspecialchars($prod['nombre']); ?>">
+            </a>
+            
+            <div class="info-producto">
+                <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                 
-                <div class="product-image-box-ra">
-                    <img src="style/img/vestido.png" alt="Producto de ejemplo 1">
-                </div>
+                <p class="precio">$<?php echo number_format($prod['precio'], 2); ?></p>
                 
-                <div class="product-info-ra">
-                    <div>
-                        <h3 class="product-name-ra">Nombre de producto</h3>
-                        <p class="product-price-ra">$45.00</p>
-                    </div>
-                    
-                    <div class="product-actions-ra">
-                        <button class="btn-ra add-cart">Añadir al carrito</button>
-                        <button class="btn-ra buy-now">Comprar</button>
-                    </div>
+                <div class="acciones">
+                    <button class="btn-carrito">Añadir al carrito</button>
+                    <a href="producto_detalle.php?slug=<?php echo $prod['slug']; ?>" class="btn-comprar">Comprar</a>
                 </div>
             </div>
-            <div class="product-card-ra">
-                <div class="product-image-box-ra">
-                    <img src="style/img/polo.png" alt="Producto de ejemplo 2">
-                </div>
-                
-                <div class="product-info-ra">
-                    <div>
-                        <h3 class="product-name-ra">Nombre de producto</h3>
-                        <p class="product-price-ra">$30.00</p>
-                    </div>
-                    
-                    <div class="product-actions-ra">
-                        <button class="btn-ra add-cart">Añadir al carrito</button>
-                        <button class="btn-ra no-stock" disabled>No stock</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card-ra">
-                <i class="fas fa-shopping-cart product-cart-icon-ra"></i>
-                <div class="product-image-box-ra">
-                    <img src="style/img/gorra.png" alt="Producto de ejemplo 3">
-                </div>
-                <div class="product-info-ra">
-                    <div>
-                        <h3 class="product-name-ra">Gorra USGP</h3>
-                        <p class="product-price-ra">$25.00</p>
-                    </div>
-                    <div class="product-actions-ra">
-                        <button class="btn-ra add-cart">Añadir al carrito</button>
-                        <button class="btn-ra buy-now">Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card-ra">
-                <div class="product-image-box-ra">
-                    <img src="style/img/img_ropa/mokap vestido 5 1.png" alt="Producto de ejemplo 4">
-                </div>
-                <div class="product-info-ra">
-                    <div>
-                        <h3 class="product-name-ra">Falda Midi</h3>
-                        <p class="product-price-ra">$40.00</p>
-                    </div>
-                    <div class="product-actions-ra">
-                        <button class="btn-ra add-cart no-stock" disabled>Añadir al carrito</button>
-                        <button class="btn-ra no-stock" disabled>No stock</button>
-                    </div>
-                </div>
-            </div>
-            </section> </div> </main>
+        </div>
+    <?php endforeach; ?>
+</div>
 
 <?php include('bases/footer.php'); ?>

@@ -1,0 +1,196 @@
+/* Contenedor Principal */
+.detalle-container {
+    max-width: 1100px;
+    margin: 150px auto 50px auto;
+    padding: 0 40px;
+    display: grid;
+    /* Columna izquierda (imagen) más ancha que el texto, como en Figma */
+    grid-template-columns: 1.2fr 0.8fr; 
+    gap: 80px; /* Separación grande entre imagen y texto */
+    align-items: start; /* Alineamos arriba para que el texto empiece arriba */
+}
+
+/* --- COLUMNA IZQUIERDA --- */
+.detalle-imagen {
+    width: 100%;
+}
+
+/* --- COLUMNA IZQUIERDA: IMAGEN (Estilo idéntico a la galería) --- */
+
+.img-zoom-container {
+    width: 100%;
+    /* Volvemos al formato vertical 3:4 (igual que en Ropa y Accesorios) */
+    aspect-ratio: 3 / 4; 
+    overflow: hidden;
+    
+    /* Mismo color de fondo gris de las tarjetas */
+    background-color: #f4f4f4; 
+    border-radius: 20px;
+    
+    /* Sombra suave externa (quitamos la interna que se veía rara) */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: crosshair; /* Cursor de mira para el zoom */
+    margin-bottom: 25px;
+}
+
+.img-zoom-container img {
+    width: 100%;
+    height: 100%;
+    /* 'cover' para que la imagen LLENE todo el espacio sin dejar huecos ni líneas blancas */
+    object-fit: cover; 
+    object-position: top center; /* Alineado arriba para no cortar cabezas */
+    
+    transition: transform 0.2s ease-out;
+    
+    /* Quitamos padding y mezclas raras para que se vea limpia */
+}
+
+
+/* --- CONTROLES BAJO LA IMAGEN (Nuevo) --- */
+.controles-bajo-imagen {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Tallas izquierda, Botones derecha */
+    flex-wrap: wrap; /* Por si la pantalla es pequeña */
+    gap: 20px;
+    padding: 0 10px;
+}
+
+/* Selector de Tallas */
+.selector-tallas {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+
+.talla-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    padding: 2px 5px;
+    position: relative;
+    transition: color 0.3s;
+    font-family: sans-serif;
+}
+
+/* Subrayado rojo al seleccionar */
+.talla-btn.seleccionado {
+    color: #a91e2c;
+    font-weight: bold;
+}
+.talla-btn.seleccionado::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #a91e2c;
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+}
+
+.talla-btn:hover {
+    color: #a91e2c;
+}
+
+.talla-btn.agotado {
+    color: #ddd;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+/* Botones (Cápsulas grises) */
+.acciones-detalle {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-anadir, .btn-comprar-ahora {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px; /* Letra un poco más pequeña y elegante */
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn-anadir {
+    background-color: #777; 
+}
+
+.btn-comprar-ahora {
+    background-color: #888;
+}
+
+.btn-anadir:hover, .btn-comprar-ahora:hover {
+    background-color: #a91e2c;
+    transform: translateY(-2px);
+}
+
+
+/* --- COLUMNA DERECHA: TEXTO --- */
+.detalle-info {
+    padding-top: 20px; /* Un poco de aire arriba */
+    text-align: right; /* Alineación a la derecha según parece sugerir el layout o centrado */
+    /* Nota: En tu imagen Frame 3 el texto se ve justificado o a la derecha, 
+       pero por estándar web suele ser izquierda. Lo dejo a la izquierda por legibilidad 
+       pero centrado verticalmente respecto a la imagen. */
+    text-align: left; 
+}
+
+.categoria-label {
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: none; /* Oculto si no quieres que salga "ROPA Y ACCESORIOS" arriba */
+}
+
+.titulo-producto {
+    font-family: sans-serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.estrellas-falsas {
+    font-size: 14px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.descripcion {
+    color: #555;
+    line-height: 1.8;
+    font-size: 16px;
+    text-align: justify; /* Texto justificado como en un libro */
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .detalle-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 120px;
+    }
+    .controles-bajo-imagen {
+        justify-content: center;
+        gap: 30px;
+    }
+}
