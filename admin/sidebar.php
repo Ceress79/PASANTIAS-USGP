@@ -9,6 +9,7 @@
             
             <li><a href="Abanners.php" class="<?php echo $pagina_actual == 'Abanners.php' ? 'active' : ''; ?>">Banners Inicio</a></li>
             <li><a href="Aproductos.php" class="<?php echo $pagina_actual == 'Aproductos.php' ? 'active' : ''; ?>">Productos Inicio</a></li>
+            <li><a href="Acontactos.php" class="<?php echo $pagina_actual == 'Acontactos.php' ? 'active' : ''; ?>">Contactos</a></li>
             <li><a href="#">Compras</a></li>
             <li><a href="#">Usuarios</a></li>
             <li><a href="#">Reportes</a></li>
