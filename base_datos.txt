@@ -210,7 +210,7 @@ INSERT INTO users (
   'Admin',
   'Principal',
   'admin',
-  '$2y$10$w2rpNhtz1aVyB81Dpu4eVexCVhX7hHGuWdrUij8AJ3/TdkkR7qQ6G', -- hash de "admin123"
+  '$2y$10$nECG91OSvgBKs81GBHZbeujzUMv5SrDHc/WC/3TJuXf/h73IU7EnS', -- hash de "admin123"
   'ADMIN',
   'CREADA'
 );
