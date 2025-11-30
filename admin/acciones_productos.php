@@ -2,193 +2,120 @@
 session_start();
 require_once "db/conexion.php";
 
-// SEGURIDAD: Proteger el archivo para que solo admins accedan
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: Alogin.php");
-    exit();
-}
+if (!isset($_SESSION['admin_id'])) { header("Location: Alogin.php"); exit(); }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
     try {
-        
-        // =================================================================
-        // ACCIÓN 1: CREAR PRODUCTO
-        // =================================================================
-        if ($_POST['accion'] == 'crear_producto') {
+        $accion = $_POST['accion'];
+
+        // --- CREAR O EDITAR ---
+        if ($accion == 'crear_producto' || $accion == 'editar_producto') {
             
-            // 1. Recibir datos básicos
             $nombre = $_POST['nombre'];
             $precio = $_POST['precio'];
             $desc = $_POST['descripcion'];
             $material = $_POST['material'];
             $dimensiones = $_POST['dimensiones'];
-            
-            // Generar UUID
-            $prod_uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000,
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-            );
+            $categoria_id = $_POST['categoria_id'];
+            $tipo_stock = $_POST['tipo_stock']; // 'unico', 'ropa', 'calzado', 'pantalones'
 
-            // Slug
+            // SLUG
             $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $nombre)));
 
-            $pdo->beginTransaction();
-
-            // 2. Obtener ID de categoría ROPA
-            $stmtCat = $pdo->prepare("SELECT id FROM categorias WHERE nombre = 'ROPA' LIMIT 1");
-            $stmtCat->execute();
-            $cat = $stmtCat->fetch(PDO::FETCH_ASSOC);
-            $cat_id = $cat ? $cat['id'] : 1; 
-
-            // 3. Insertar en PRODUCTOS
-            $sql = "INSERT INTO productos (id, nombre, slug, descripcion, material, dimensiones, precio, categoria_id, disponible) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$prod_uuid, $nombre, $slug, $desc, $material, $dimensiones, $precio, $cat_id]);
-
-            // 4. Insertar VARIANTES (Tallas)
-            $tallas = ['S' => $_POST['stock_s'], 'M' => $_POST['stock_m'], 'L' => $_POST['stock_l'], 'XL' => $_POST['stock_xl']];
-            foreach ($tallas as $talla => $cantidad) {
-                $var_uuid = uniqid(); 
-                $stmtVar = $pdo->prepare("INSERT INTO variantes (id, producto_id, talla, stock) VALUES (?, ?, ?, ?)");
-                $stmtVar->execute([$var_uuid, $prod_uuid, $talla, $cantidad]);
-            }
-
-            // 5. Manejar la IMAGEN
-            if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-                $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-                $nombre_archivo = $slug . '_' . time() . '.' . $ext;
+            if ($accion == 'crear_producto') {
+                // GENERAR UUID
+                $id = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0x0fff) | 0x4000, mt_rand(0, 0x3fff) | 0x8000, mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
                 
-                $ruta_db = "uploads/productos/" . $nombre_archivo;
-                $ruta_fisica = "../uploads/productos/" . $nombre_archivo;
-
-                if (!file_exists("../uploads/productos/")) {
-                    mkdir("../uploads/productos/", 0777, true);
-                }
-
-                if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_fisica)) {
-                    $stmtFoto = $pdo->prepare("INSERT INTO fotos (tipo, producto_id, ruta, nombre_archivo, es_perfil) VALUES ('PRODUCTO', ?, ?, ?, 1)");
-                    $stmtFoto->execute([$prod_uuid, $ruta_db, $nombre_archivo]);
-                }
-            }
-
-            $pdo->commit();
-            header("Location: Aproductos.php?mensaje=creado");
-            exit();
-        }
-
-        // =================================================================
-        // ACCIÓN 2: EDITAR PRODUCTO (NUEVO)
-        // =================================================================
-        elseif ($_POST['accion'] == 'editar_producto') {
-            
-            $id = $_POST['id'];
-            $nombre = $_POST['nombre'];
-            $precio = $_POST['precio'];
-            $desc = $_POST['descripcion'];
-            $material = $_POST['material'];
-            $dimensiones = $_POST['dimensiones'];
-
-            $pdo->beginTransaction();
-
-            // 1. Actualizar Datos Básicos
-            $sql = "UPDATE productos SET nombre=?, descripcion=?, material=?, dimensiones=?, precio=? WHERE id=?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nombre, $desc, $material, $dimensiones, $precio, $id]);
-
-            // 2. Actualizar Stocks (Variantes)
-            // Se actualiza si existe, si no (caso raro), se inserta
-            $tallas = ['S' => $_POST['stock_s'], 'M' => $_POST['stock_m'], 'L' => $_POST['stock_l'], 'XL' => $_POST['stock_xl']];
-            
-            foreach ($tallas as $talla => $cantidad) {
-                $stmtVar = $pdo->prepare("UPDATE variantes SET stock = ? WHERE producto_id = ? AND talla = ?");
-                $stmtVar->execute([$cantidad, $id, $talla]);
+                $sql = "INSERT INTO productos (id, nombre, slug, descripcion, material, dimensiones, precio, categoria_id, disponible) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$id, $nombre, $slug, $desc, $material, $dimensiones, $precio, $categoria_id]);
+            } else {
+                $id = $_POST['id'];
+                $sql = "UPDATE productos SET nombre=?, descripcion=?, material=?, dimensiones=?, precio=?, categoria_id=? WHERE id=?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$nombre, $desc, $material, $dimensiones, $precio, $categoria_id, $id]);
                 
-                // Si rowCount es 0, puede ser que el stock era el mismo O que no existía la talla.
-                // Verificamos si existe la talla para ese producto.
-                $check = $pdo->prepare("SELECT id FROM variantes WHERE producto_id=? AND talla=?");
-                $check->execute([$id, $talla]);
-                if ($check->rowCount() == 0) {
-                     $stmtInsert = $pdo->prepare("INSERT INTO variantes (id, producto_id, talla, stock) VALUES (UUID(), ?, ?, ?)");
-                     $stmtInsert->execute([$id, $talla, $cantidad]);
+                // Al editar, borramos variantes viejas para reinsertar las nuevas (evita conflictos de tipos)
+                $pdo->prepare("DELETE FROM variantes WHERE producto_id = ?")->execute([$id]);
+            }
+
+            // --- GESTIÓN DE VARIANTES (DINÁMICA) ---
+            $tallas_insertar = [];
+
+            if ($tipo_stock == 'unico') {
+                $tallas_insertar['ÚNICA'] = $_POST['stock_unico_cant'] ?? 0;
+            } 
+            elseif ($tipo_stock == 'ropa') {
+                foreach (['S', 'M', 'L', 'XL'] as $t) {
+                    $tallas_insertar[$t] = $_POST['stock_'.strtolower($t)] ?? 0;
+                }
+            }
+            elseif ($tipo_stock == 'calzado') {
+                for ($i=38; $i<=44; $i++) {
+                    $tallas_insertar[(string)$i] = $_POST['stock_zap_'.$i] ?? 0;
+                }
+            }
+            elseif ($tipo_stock == 'pantalones') {
+                for ($i=28; $i<=36; $i+=2) {
+                    $tallas_insertar[(string)$i] = $_POST['stock_pant_'.$i] ?? 0;
                 }
             }
 
-            // 3. Actualizar Foto (Solo si se subió una nueva)
-            if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-                // Primero buscamos la foto vieja
-                $stmtOld = $pdo->prepare("SELECT ruta FROM fotos WHERE producto_id = ? AND es_perfil = 1");
-                $stmtOld->execute([$id]);
-                $fotoVieja = $stmtOld->fetch(PDO::FETCH_ASSOC);
+            // INSERTAR LAS VARIANTES
+            $stmtVar = $pdo->prepare("INSERT INTO variantes (id, producto_id, talla, stock) VALUES (UUID(), ?, ?, ?)");
+            foreach ($tallas_insertar as $talla => $stock) {
+                // Solo insertamos si el stock es mayor o igual a 0 (aunque sea 0 para mostrar agotado)
+                if ($stock !== '') { 
+                    $stmtVar->execute([$id, $talla, $stock]);
+                }
+            }
 
-                // Procesar nueva foto
-                $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $nombre)));
+            // --- GESTIÓN DE FOTO ---
+            if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
                 $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
                 $nombre_archivo = $slug . '_' . time() . '.' . $ext;
                 $ruta_db = "uploads/productos/" . $nombre_archivo;
                 $ruta_fisica = "../uploads/productos/" . $nombre_archivo;
 
+                if (!file_exists("../uploads/productos/")) mkdir("../uploads/productos/", 0777, true);
+
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_fisica)) {
-                    // Borrar archivo viejo físico si existe
-                    if ($fotoVieja && file_exists("../" . $fotoVieja['ruta'])) {
-                        unlink("../" . $fotoVieja['ruta']);
-                    }
+                    // Borrar foto vieja si existe
+                    $stmtOld = $pdo->prepare("SELECT ruta FROM fotos WHERE producto_id = ? AND es_perfil = 1");
+                    $stmtOld->execute([$id]);
+                    $old = $stmtOld->fetch();
+                    if ($old && file_exists("../".$old['ruta'])) unlink("../".$old['ruta']);
                     
-                    // Actualizar DB
-                    if ($fotoVieja) {
-                        $stmtFoto = $pdo->prepare("UPDATE fotos SET ruta=?, nombre_archivo=? WHERE producto_id=? AND es_perfil=1");
-                        $stmtFoto->execute([$ruta_db, $nombre_archivo, $id]);
+                    // Actualizar o Insertar
+                    if ($old) {
+                        $pdo->prepare("UPDATE fotos SET ruta=?, nombre_archivo=? WHERE producto_id=? AND es_perfil=1")->execute([$ruta_db, $nombre_archivo, $id]);
                     } else {
-                        // Si no tenía foto antes, insertar
-                        $stmtFoto = $pdo->prepare("INSERT INTO fotos (tipo, producto_id, ruta, nombre_archivo, es_perfil) VALUES ('PRODUCTO', ?, ?, ?, 1)");
-                        $stmtFoto->execute([$id, $ruta_db, $nombre_archivo]);
+                        $pdo->prepare("INSERT INTO fotos (tipo, producto_id, ruta, nombre_archivo, es_perfil) VALUES ('PRODUCTO', ?, ?, ?, 1)")->execute([$id, $ruta_db, $nombre_archivo]);
                     }
                 }
             }
 
-            $pdo->commit();
-            header("Location: Aproductos.php?mensaje=actualizado");
+            header("Location: Aproductos.php?mensaje=" . ($accion == 'crear_producto' ? 'creado' : 'actualizado'));
             exit();
         }
 
-        // =================================================================
-        // ACCIÓN 3: ELIMINAR PRODUCTO
-        // =================================================================
-        elseif ($_POST['accion'] == 'eliminar_producto') {
-            
+        // --- ELIMINAR ---
+        if ($accion == 'eliminar_producto') {
             $id = $_POST['id'];
-
-            // 1. Buscar las imágenes para borrar del disco
-            $stmtFotos = $pdo->prepare("SELECT ruta FROM fotos WHERE producto_id = ?");
-            $stmtFotos->execute([$id]);
-            $fotos = $stmtFotos->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($fotos as $foto) {
-                $archivo_fisico = "../" . $foto['ruta']; 
-                if (file_exists($archivo_fisico)) {
-                    unlink($archivo_fisico);
-                }
-            }
-
-            // 2. Eliminar de la BD
-            $stmt = $pdo->prepare("DELETE FROM productos WHERE id = ?");
+            // Borrar fotos físicas
+            $stmt = $pdo->prepare("SELECT ruta FROM fotos WHERE producto_id = ?");
             $stmt->execute([$id]);
-
+            while ($row = $stmt->fetch()) {
+                if (file_exists("../".$row['ruta'])) unlink("../".$row['ruta']);
+            }
+            // Borrar de BD (Cascada borra variantes y fotos)
+            $pdo->prepare("DELETE FROM productos WHERE id = ?")->execute([$id]);
             header("Location: Aproductos.php?mensaje=eliminado");
             exit();
         }
 
     } catch (Exception $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        header("Location: Aproductos.php?error=" . urlencode("Error del sistema: " . $e->getMessage()));
+        header("Location: Aproductos.php?error=" . urlencode($e->getMessage()));
         exit();
     }
-
-} else {
-    header("Location: Aproductos.php");
-    exit();
 }
