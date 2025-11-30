@@ -2,7 +2,7 @@
 -- 🌐 BASE DE DATOS: usgpcommerce
 -- ======================================================
 
-drop database usgpcommerce;
+drop database if  EXISTS usgpcommerce;
 
 CREATE DATABASE IF NOT EXISTS usgpcommerce
   DEFAULT CHARACTER SET utf8mb4
