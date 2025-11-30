@@ -7,27 +7,19 @@ if (!isset($_SESSION['admin_id'])) {
 require_once "db/conexion.php";
 
 // 1. DETERMINAR CATEGORÍA ACTUAL (Por defecto 1 = Ropa)
-// Si no hay GET, usamos 1. Si intentan poner 4 (Otros), lo forzamos a 1.
 $cat_actual = isset($_GET['cat']) ? (int)$_GET['cat'] : 1;
-if ($cat_actual < 1 || $cat_actual > 3) $cat_actual = 1;
+if ($cat_actual < 1 || $cat_actual > 4) $cat_actual = 1; // 1-4 son validos
 
-// Nombres para mostrar
-$nombres_cat = [1 => 'Ropa y Accesorios', 2 => 'Papelería', 3 => 'Hogar'];
+$nombres_cat = [1 => 'Ropa y Accesorios', 2 => 'Papelería', 3 => 'Hogar', 4 => 'Otros'];
 $nombre_cat_actual = $nombres_cat[$cat_actual];
 
 // --- LÓGICA DE EDICIÓN ---
 $producto_editar = null;
-$mostrar_formulario = false; // Por defecto oculto
+$mostrar_formulario = false; 
 
-// Valores por defecto
 $valores = [
-    'nombre' => '',
-    'precio' => '',
-    'descripcion' => '',
-    'material' => '',
-    'dimensiones' => '',
-    'stock_unico' => 0,
-    'tipo_stock' => ''
+    'nombre' => '', 'precio' => '', 'descripcion' => '', 'material' => '', 'dimensiones' => '',
+    'stock_unico' => 0, 'tipo_stock' => ''
 ];
 $accion_form = 'crear_producto';
 $titulo_form = 'Añadir Nuevo Producto';
@@ -36,14 +28,13 @@ $foto_required = 'required';
 $variantes_db = [];
 
 if (isset($_GET['edit_id'])) {
-    $mostrar_formulario = true; // Si editamos, mostramos el form
+    $mostrar_formulario = true;
     $id_editar = $_GET['edit_id'];
     $stmt = $pdo->prepare("SELECT * FROM productos WHERE id = ?");
     $stmt->execute([$id_editar]);
     $producto_editar = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($producto_editar) {
-        // Asegurar que estamos en la categoría correcta al editar
         if ($producto_editar['categoria_id'] != $cat_actual) {
             header("Location: Aproductos.php?cat=" . $producto_editar['categoria_id'] . "&edit_id=" . $id_editar);
             exit();
@@ -52,7 +43,7 @@ if (isset($_GET['edit_id'])) {
         $accion_form = 'editar_producto';
         $titulo_form = 'Editar Producto';
         $btn_texto = 'Actualizar Producto';
-        $foto_required = '';
+        $foto_required = ''; 
 
         $stmtVar = $pdo->prepare("SELECT talla, stock FROM variantes WHERE producto_id = ?");
         $stmtVar->execute([$id_editar]);
@@ -60,16 +51,15 @@ if (isset($_GET['edit_id'])) {
 
         $valores = array_merge($valores, $producto_editar);
         $valores['stock_unico'] = $variantes_db['ÚNICA'] ?? 0;
-
-        // Deducir tipo de stock
-        if (isset($variantes_db['S'])) $valores['tipo_stock'] = 'ropa';
-        elseif (isset($variantes_db['38'])) $valores['tipo_stock'] = 'calzado';
-        elseif (isset($variantes_db['28'])) $valores['tipo_stock'] = 'pantalones';
+        
+        if(isset($variantes_db['S'])) $valores['tipo_stock'] = 'ropa';
+        elseif(isset($variantes_db['38'])) $valores['tipo_stock'] = 'calzado';
+        elseif(isset($variantes_db['28'])) $valores['tipo_stock'] = 'pantalones';
         else $valores['tipo_stock'] = 'unico';
     }
 }
 
-// --- CONSULTA LISTADO (Filtrada por la categoría actual) ---
+// --- CONSULTA LISTADO ---
 $sql = "SELECT p.*, f.ruta as foto_ruta 
         FROM productos p 
         LEFT JOIN fotos f ON p.id = f.producto_id AND f.es_perfil = 1 
@@ -78,149 +68,22 @@ $sql = "SELECT p.*, f.ruta as foto_ruta
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$cat_actual]);
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$prod_count = count($productos);
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Productos</title>
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/Aproductos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* ESTILOS NUEVOS TIPO BANNERS */
-        .top-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .nav-btn {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #555;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-
-        .nav-btn:hover {
-            background: #f9f9f9;
-            border-color: #ccc;
-        }
-
-        .nav-btn.active {
-            background: #00bcd4;
-            color: white;
-            border-color: #00bcd4;
-        }
-
-        /* Color cyan tipo tu imagen */
-
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .btn-add-new {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-add-new:hover {
-            background: #0056b3;
-        }
-
-        /* Formulario desplegable */
-        #formContainer {
-            display: <?php echo $mostrar_formulario ? 'block' : 'none'; ?>;
-            transition: all 0.3s;
-            margin-bottom: 30px;
-        }
-
-        /* Estilos generales del form */
-        .form-box {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 5px;
-        }
-
-        /* Stocks */
-        .stock-group {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #ccc;
-            margin-top: 15px;
-        }
-
-        .stock-inputs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .stock-item {
-            text-align: center;
-        }
-
-        .stock-item input {
-            width: 60px;
-            text-align: center;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .preview-img-prod {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-    </style>
 </head>
-
 <body>
     <div class="admin-container">
         <?php include 'sidebar.php'; ?>
 
         <main class="main-content">
-
+            
             <div class="top-nav">
                 <a href="Aproductos.php?cat=1" class="nav-btn <?php echo ($cat_actual == 1) ? 'active' : ''; ?>">
                     <i class="fas fa-tshirt"></i> Trabajar en Ropa
@@ -234,8 +97,7 @@ $prod_count = count($productos);
             </div>
 
             <div class="header-actions">
-                <h2 style="margin:0;">Listado para: <?php echo $nombre_cat_actual; ?></h2>
-
+                <h2 style="margin:0; color:#333;">Listado para: <?php echo $nombre_cat_actual; ?></h2>
                 <?php if (!$mostrar_formulario): ?>
                     <button class="btn-add-new" onclick="toggleForm()">
                         <i class="fas fa-plus"></i> Añadir Nuevo Producto
@@ -243,24 +105,27 @@ $prod_count = count($productos);
                 <?php endif; ?>
             </div>
 
-            <?php if (isset($_GET['mensaje'])): ?><p class="msg-success" style="color:green; margin-bottom:15px;">¡Acción realizada con éxito!</p><?php endif; ?>
+            <?php if(isset($_GET['mensaje'])): ?>
+                <p class="msg-success" style="padding:15px; background:#d4edda; color:#155724; border-radius:5px; margin-bottom:20px;">
+                    <i class="fas fa-check-circle"></i> Acción realizada con éxito.
+                </p>
+            <?php endif; ?>
 
-            <div id="formContainer">
+            <div id="formContainer" style="display: <?php echo $mostrar_formulario ? 'block' : 'none'; ?>;">
                 <form action="acciones_productos.php" method="POST" enctype="multipart/form-data" class="form-box">
                     <input type="hidden" name="accion" value="<?php echo $accion_form; ?>">
                     <?php if ($producto_editar): ?><input type="hidden" name="id" value="<?php echo $producto_editar['id']; ?>"><?php endif; ?>
-
                     <input type="hidden" name="categoria_id" value="<?php echo $cat_actual; ?>">
 
-                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:20px;">
-                        <h3 style="margin:0;"><?php echo $titulo_form; ?></h3>
-                        <button type="button" onclick="cancelarForm()" style="background:none; border:none; color:red; cursor:pointer;">Cancelar</button>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:20px;">
+                        <h3 style="margin:0; color:#007bff;"><?php echo $titulo_form; ?></h3>
+                        <button type="button" onclick="cancelarForm()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-weight:bold;">Cancelar</button>
                     </div>
 
                     <?php if ($cat_actual == 1): ?>
-                        <div style="margin-bottom: 20px; background: #fff5f5; padding: 15px; border-radius: 5px; border: 1px solid #ffdce0;">
+                        <div style="margin-bottom: 20px; background: #fff5f5; padding: 20px; border-radius: 8px; border: 1px solid #ffdce0;">
                             <label style="color:#a91e2c; font-weight:bold;">Tipo de Variantes / Tallas:</label>
-                            <select name="tipo_stock" id="tipoStockSelect" onchange="mostrarBloqueStock()">
+                            <select name="tipo_stock" id="tipoStockSelect" onchange="mostrarBloqueStock()" style="border-color:#a91e2c;">
                                 <option value="ropa" <?php echo ($valores['tipo_stock'] == 'ropa') ? 'selected' : ''; ?>>Ropa Estándar (S, M, L, XL)</option>
                                 <option value="pantalones" <?php echo ($valores['tipo_stock'] == 'pantalones') ? 'selected' : ''; ?>>Pantalones (28 - 36)</option>
                                 <option value="calzado" <?php echo ($valores['tipo_stock'] == 'calzado') ? 'selected' : ''; ?>>Calzado (38 - 44)</option>
@@ -285,7 +150,6 @@ $prod_count = count($productos);
                     </div>
 
                     <div id="containerStocks">
-
                         <div id="stock_unico" class="stock-group <?php echo ($cat_actual == 1 && $valores['tipo_stock'] != 'unico') ? 'hidden' : ''; ?>">
                             <label style="color:#007bff; font-weight:bold;">Stock Total (Unidades):</label>
                             <input type="number" name="stock_unico_cant" value="<?php echo $valores['stock_unico']; ?>" min="0" style="width:120px;">
@@ -333,43 +197,42 @@ $prod_count = count($productos);
             <div class="table-container" style="background:white; padding:20px; border:1px solid #ddd; border-radius:8px;">
                 <table class="admin-table" style="width: 100%; border-collapse: collapse; table-layout: fixed;">
                     <thead>
-                        <tr style="background: #f4f4f4; text-align: left; border-bottom:2px solid #ddd;">
-                            <th style="padding: 12px; width: 60px;">ID</th>
-                            <th style="padding: 12px; width: 80px;">Img</th>
-                            <th style="padding: 12px;">Nombre</th>
-                            <th style="padding: 12px; width: 100px;">Precio</th>
-                            <th style="padding: 12px; width: 100px;">Estado</th>
-                            <th style="padding: 12px; width: 150px; text-align:right;">Acciones</th>
+                        <tr style="background: #f8f9fa; text-align: left; border-bottom:2px solid #eee;">
+                            <th style="padding: 15px; width: 80px;">ID</th>
+                            <th style="padding: 15px; width: 80px;">Img</th>
+                            <th style="padding: 15px;">Nombre</th>
+                            <th style="padding: 15px; width: 120px;">Precio</th>
+                            <th style="padding: 15px; width: 100px;">Estado</th>
+                            <th style="padding: 15px; width: 180px; text-align:right;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($productos)): ?>
-                            <tr>
-                                <td colspan="6" class="no-data" style="padding:30px; text-align:center; color:#777;">No hay productos en <?php echo $nombre_cat_actual; ?>.</td>
-                            </tr>
+                            <tr><td colspan="6" class="no-data" style="padding:40px; text-align:center; color:#999;">No hay productos registrados en esta categoría.</td></tr>
                         <?php else: ?>
                             <?php foreach ($productos as $prod): ?>
                                 <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 12px; color:#777; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        <?php echo substr($prod['id'], 0, 8); ?>... </td>
-                                    <td style="padding: 12px;">
+                                    <td style="padding: 15px; color:#999; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <?php echo substr($prod['id'], 0, 8); ?>... 
+                                    </td>
+                                    <td style="padding: 15px;">
                                         <img src="<?php echo !empty($prod['foto_ruta']) ? '../' . $prod['foto_ruta'] : '../style/img/placeholder.png'; ?>" class="preview-img-prod">
                                     </td>
-                                    <td style="padding: 12px; font-weight: bold;">
-                                        <?php echo htmlspecialchars($prod['nombre']); ?>
+                                    <td style="padding: 15px;">
+                                        <strong><?php echo htmlspecialchars($prod['nombre']); ?></strong>
                                     </td>
-                                    <td style="padding: 12px;">
+                                    <td style="padding: 15px;">
                                         $<?php echo number_format($prod['precio'], 2); ?>
                                     </td>
-                                    <td style="padding: 12px;">
-                                        <span style="background:#e0ffe0; color:green; padding:3px 8px; border-radius:10px; font-size:12px;">Activo</span>
+                                    <td style="padding: 15px;">
+                                        <span style="background:#e0ffe0; color:green; padding:4px 10px; border-radius:15px; font-size:12px; font-weight:bold;">Activo</span>
                                     </td>
-                                    <td style="padding: 12px; text-align:right;">
-                                        <a href="Aproductos.php?cat=<?php echo $cat_actual; ?>&edit_id=<?php echo $prod['id']; ?>" style="display:inline-block; padding:5px 10px; border:1px solid #007bff; color:#007bff; border-radius:4px; text-decoration:none; margin-right:5px;">Editar</a>
-                                        <form action="acciones_productos.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Eliminar?');">
+                                    <td style="padding: 15px; text-align:right;">
+                                        <a href="Aproductos.php?cat=<?php echo $cat_actual; ?>&edit_id=<?php echo $prod['id']; ?>" style="display:inline-block; padding:6px 12px; border:1px solid #007bff; color:#007bff; border-radius:4px; text-decoration:none; margin-right:5px; font-size:13px;">Editar</a>
+                                        <form action="acciones_productos.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                             <input type="hidden" name="accion" value="eliminar_producto">
                                             <input type="hidden" name="id" value="<?php echo $prod['id']; ?>">
-                                            <button type="submit" style="background:white; border:1px solid #dc3545; color:#dc3545; padding:5px 10px; border-radius:4px; cursor:pointer;">Eliminar</button>
+                                            <button type="submit" style="background:white; border:1px solid #dc3545; color:#dc3545; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px;">Eliminar</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -382,47 +245,13 @@ $prod_count = count($productos);
         </main>
     </div>
 
+    <script src="js/Aproductos.js"></script>
     <script>
-        function toggleForm() {
-            document.getElementById('formContainer').style.display = 'block';
-            window.scrollTo(0, 0); // Subir para ver el form
-        }
-
-        function cancelarForm() {
-            // Si estamos editando (hay ID en URL), recargar sin ID para limpiar
-            if (window.location.search.includes('edit_id')) {
-                window.location.href = 'Aproductos.php?cat=<?php echo $cat_actual; ?>';
-            } else {
-                document.getElementById('formContainer').style.display = 'none';
-            }
-        }
-
-        // Lógica de Stock para Ropa
-        function mostrarBloqueStock() {
-            const tipo = document.getElementById('tipoStockSelect');
-            if (!tipo) return; // Si no existe (porque estamos en Papelería/Hogar), salir.
-
-            const val = tipo.value;
-
-            // Ocultar todos los específicos de ropa
-            ['stock_unico', 'stock_ropa', 'stock_calzado', 'stock_pantalones'].forEach(id => {
-                if (document.getElementById(id)) document.getElementById(id).classList.add('hidden');
-            });
-
-            if (val === 'unico') document.getElementById('stock_unico').classList.remove('hidden');
-            if (val === 'ropa') document.getElementById('stock_ropa').classList.remove('hidden');
-            if (val === 'calzado') document.getElementById('stock_calzado').classList.remove('hidden');
-            if (val === 'pantalones') document.getElementById('stock_pantalones').classList.remove('hidden');
-        }
-
-        // Ejecutar al cargar
+        // Inicializar lógica específica de la página
         document.addEventListener("DOMContentLoaded", function() {
-            // Si estamos en Ropa, inicializar el selector
-            <?php if ($cat_actual == 1): ?>
-                mostrarBloqueStock();
-            <?php endif; ?>
+            // Pasamos true si es categoría 1 (Ropa), false si no
+            initProductos(<?php echo ($cat_actual == 1) ? 'true' : 'false'; ?>);
         });
     </script>
 </body>
-
 </html>
