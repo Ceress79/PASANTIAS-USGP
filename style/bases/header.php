@@ -12,24 +12,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
-
-    <header>
-        <div class="top-bar">
-            <div class="container">
-                <img src="style/img/logo.png" alt="Logo USGP" class="logo">
-            </div>
+<header>
+    <div class="top-bar">
+        <div class="container">
+            <img src="style/img/logo.png" alt="Logo USGP" class="logo">
         </div>
-        <nav class="main-nav">
-            <div class="container">
-                <ul>
-                    <li><a href="#">Ropa y Accesorios</a></li>
-                    <li><a href="#">Papelería</a></li>
-                    <li><a href="#">Hogar</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
+    </div>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#">Ropa y Accesorios</a></li>
+                <li><a href="#">Papelería</a></li>
+                <li><a href="#">Hogar</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                
+                <!-- Ícono Carrito -->
                 <a href="#" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
+            
+
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>

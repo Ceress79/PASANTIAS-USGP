@@ -508,3 +508,25 @@ main {
         max-width: 100%;
     }
 }
+
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-login,
+.cart-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-login i,
+.cart-icon i {
+    font-size: 20px;
+}
