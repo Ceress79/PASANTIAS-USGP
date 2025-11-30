@@ -13,7 +13,7 @@
             <li><a href="#">Usuarios</a></li>
             <li><a href="#">Reportes</a></li>
             
-            <li><a href="configuracion.php" class="<?php echo $pagina_actual == 'configuracion.php' ? 'active' : ''; ?>">Configuración</a></li>
+            <li><a href="configuracion.php" class="<?php echo $pagina_actual == 'configuracion.php' ? 'active' : ''; ?>">Nosotros</a></li>
             
             <li><a href="logout.php">Cerrar sesión</a></li>
         </ul>

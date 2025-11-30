@@ -74,9 +74,7 @@ if (isset($_GET['slug'])) {
     <div class="detalle-info">
         <h5 class="categoria-label">Ropa y Accesorios</h5>
         
-        <h1 class="titulo-producto"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-        
-        <div class="estrellas-falsas">$$$$$</div> 
+        <h1 class="titulo-producto"><?php echo htmlspecialchars($producto['nombre']); ?></h1> 
         
         <div class="descripcion">
             <p><?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?></p>
