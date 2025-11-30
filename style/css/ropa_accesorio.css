@@ -4,9 +4,13 @@
 
 /* --- TÍTULO DE LA SECCIÓN --- */
 .contenedor-titulo {
+    /* AGREGA ESTAS 2 LÍNEAS: */
+    width: 100%; 
+    box-sizing: border-box; /* Para que el padding no rompa el ancho */
+    
+    /* Lo demás déjalo igual: */
     max-width: 1200px;
     padding: 0 20px;
-    /* MARGEN CLAVE: 150px arriba para que el header fijo no tape el título */
     margin: 150px auto 20px auto; 
 }
 
@@ -14,8 +18,8 @@
     font-family: sans-serif;
     font-size: 28px;
     color: #333;
-    font-weight: 500; /* Semi-bold, estilo limpio */
-    text-align: left; /* Alineado a la izquierda como en Figma */
+    font-weight: 500;
+    text-align: left; /* Esto asegura que el texto se pegue a la izquierda */
 }
 
 /* --- GRILLA DE PRODUCTOS --- */

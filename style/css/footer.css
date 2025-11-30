@@ -1,36 +1,52 @@
+/* =========================================
+   FIX: STICKY FOOTER (Esto es lo nuevo que necesitas)
+   ========================================= */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Obliga al cuerpo a medir el 100% de la pantalla */
+}
+
+/* =========================================
+   TU FOOTER ACTUAL (Con la corrección)
+   ========================================= */
+
 /* Estilos para el footer completo */
 .site-footer {
     /* 1. Apariencia y Color */
-    background-color: #878786; /* Color gris proporcionado */
-    color: #ffffff;            /* Texto en color blanco */
-    font-family: Arial, sans-serif; /* Fuente estándar para claridad */
+    background-color: #878786;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
     
     /* 2. Diseño y Posición */
-    width: 100%;               /* Ocupa el 100% del ancho del contenedor */
-    box-sizing: border-box;    /* Importante para que el padding no añada ancho extra */
+    width: 100%;
+    box-sizing: border-box;
     
-    /* 3. Estabilidad (para que no se rompa/desborde) */
-    /* Se utiliza Flexbox o Grids dentro de .footer-content para manejar la disposición,
-       pero el footer principal solo necesita asegurar su ancho y padding. */
+    /* 3. LA LÍNEA MÁGICA */
+    margin-top: auto; /* <--- ESTO EMPUJA EL FOOTER AL FONDO */
 }
 
 /* Contenedor interno para el texto */
 .footer-content {
-    /* Centrar o limitar el ancho si es necesario, pero manteniendo el texto a la izquierda */
-    max-width: 1200px; /* Ancho máximo para el contenido, ajústalo según tu diseño */
-    margin: 0 auto;    /* Centra el contenedor interno horizontalmente */
-    padding: 20px 20px; /* Relleno superior/inferior y a los lados */
-    text-align: left;  /* Alinea todo el texto del contenido a la IZQUIERDA */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px;
+    text-align: left;
 }
 
 /* Estilos para los párrafos de texto */
 .footer-content p {
-    margin: 5px 0;             /* Espacio vertical entre líneas de texto */
-    line-height: 1.4;          /* Interlineado para mejor lectura */
-    font-size: 14px;           /* Tamaño de fuente */
+    margin: 5px 0;
+    line-height: 1.4;
+    font-size: 14px;
 }
 
-/* Estilo para la información de resolución (si se quiere destacar o ubicar de forma diferente) */
+/* Estilo para la información de resolución */
 .resolution-info {
     font-size: 12px;
     margin-top: 10px;
