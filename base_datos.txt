@@ -50,10 +50,9 @@ CREATE TABLE productos (
     slug VARCHAR(200) UNIQUE,
     descripcion TEXT,
     
-    -- ✅ CAMBIOS REALIZADOS (Nuevos campos del PDF):
+    -- Campos añadidos para ficha técnica:
     material VARCHAR(150) NULL,
     dimensiones VARCHAR(150) NULL,
-    -- ---------------------------------------------
 
     precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     categoria_id INT NULL,
@@ -65,12 +64,15 @@ CREATE TABLE productos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ======================================================
--- 👕 Tabla: variantes (Tallas o versiones del producto)
+-- 👕 Tabla: variantes (Tallas, Números o Única)
 -- ======================================================
 CREATE TABLE variantes (
     id CHAR(36) CHARACTER SET ascii PRIMARY KEY,
     producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
-    talla ENUM('S','M','L','XL') NOT NULL,
+    
+    -- CAMBIO IMPORTANTE: VARCHAR para aceptar "S", "38", "ÚNICA", etc.
+    talla VARCHAR(50) NOT NULL, 
+    
     stock INT NOT NULL DEFAULT 0,
     FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -128,7 +130,7 @@ CREATE TABLE order_items (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ======================================================
--- 📈 Tabla: inventory_movements (Registro de movimientos de stock)
+-- 📈 Tabla: inventory_movements (Movimientos de stock)
 -- ======================================================
 CREATE TABLE inventory_movements (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,7 +155,7 @@ CREATE TABLE admin_sessions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ======================================================
--- ⚙️ Tabla: configuracion (Ajustes generales del sitio)
+-- ⚙️ Tabla: configuracion (Ajustes generales)
 -- ======================================================
 CREATE TABLE configuracion (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -162,13 +164,6 @@ CREATE TABLE configuracion (
   descripcion VARCHAR(255) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO configuracion (clave, valor, descripcion)
-VALUES 
-('about_us_text', 'Texto inicial de ejemplo para la sección Nosotros.', 'Texto mostrado en la sección Nosotros'),
-('about_us_image', 'uploads/site/default_about.png', 'Imagen mostrada en la sección Nosotros')
-ON DUPLICATE KEY UPDATE valor = VALUES(valor);
-
-
 -- Índices útiles
 CREATE INDEX idx_productos_categoria ON productos(categoria_id);
 CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
@@ -176,9 +171,25 @@ CREATE INDEX idx_orders_user ON orders(user_id);
 
 
 -- ======================================================
--- USUARIO ADMINISTRADOR 
+-- 🟢 DATOS INICIALES (NECESARIOS)
 -- ======================================================
 
+-- 1. Insertar Categorías Base (Para que funcionen los botones del Admin)
+INSERT INTO categorias (id, nombre, descripcion) VALUES 
+(1, 'ROPA', 'Ropa y Accesorios institucionales'),
+(2, 'PAPELERIA', 'Útiles de oficina y papelería'),
+(3, 'HOGAR', 'Artículos decorativos y de hogar'),
+(4, 'OTROS', 'Otros productos varios')
+ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
+
+-- 2. Configuración Inicial
+INSERT INTO configuracion (clave, valor, descripcion)
+VALUES 
+('about_us_text', 'Texto inicial de ejemplo para la sección Nosotros.', 'Texto mostrado en la sección Nosotros'),
+('about_us_image', 'uploads/site/default_about.png', 'Imagen mostrada en la sección Nosotros')
+ON DUPLICATE KEY UPDATE valor = VALUES(valor);
+
+-- 3. Usuario Administrador
 INSERT INTO users (
   uuid, cedula, nombres, apellidos, email, password_hash, role, estado_cuenta
 ) VALUES (
