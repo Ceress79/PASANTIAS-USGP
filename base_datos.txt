@@ -1,6 +1,9 @@
 -- ======================================================
 -- 🌐 BASE DE DATOS: usgpcommerce
 -- ======================================================
+
+drop database usgpcommerce;
+
 CREATE DATABASE IF NOT EXISTS usgpcommerce
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
