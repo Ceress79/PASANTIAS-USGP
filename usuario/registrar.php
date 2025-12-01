@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: cliente_panel.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -45,7 +45,8 @@ if (isset($_SESSION['register_error'])) {
                 <p class="error-msg"><?php echo htmlspecialchars($error_para_mostrar); ?></p>
             <?php endif; ?>
 
-            <form action="usuario/user_acciones.php" method="POST">
+            <form action="user_acciones.php" method="POST">
+
                 <input type="hidden" name="accion" value="register">
 
                 <div class="input-group">

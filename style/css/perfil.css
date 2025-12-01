@@ -1,0 +1,39 @@
+.perfil-container {
+    width: 400px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.perfil-box {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.btn-logout, .btn-volver {
+    display: block;
+    margin-top: 20px;
+    padding: 12px;
+    background: #d9534f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.btn-volver {
+    background: #0275d8;
+}
+
+.btn-logout:hover {
+    background: #c9302c;
+}
+
+.btn-volver:hover {
+    background: #025aa5;
+}

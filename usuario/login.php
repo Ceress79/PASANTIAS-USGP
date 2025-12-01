@@ -20,7 +20,7 @@ if (isset($_SESSION['login_error_user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Usuario</title>
-    <link rel="stylesheet" href="admin/css/login.css">
+    <link rel="stylesheet" href="../admin/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
@@ -28,7 +28,7 @@ if (isset($_SESSION['login_error_user'])) {
 <div class="login-container">
     <div class="login-box">
         <div class="logo-container">
-            <img src="style/img/logo2.png" class="logo">
+            <img src="../style/img/logo2.png" class="logo">
         </div>
 
         <h2>Iniciar Sesión</h2>
@@ -54,7 +54,7 @@ if (isset($_SESSION['login_error_user'])) {
 
             <p style="margin-top:15px;">
                 ¿No tienes cuenta?
-                <a href="register.php">Crear una cuenta</a>
+                <a href="registrar.php">Crear una cuenta</a>
             </p>
         </form>
     </div>
