@@ -193,10 +193,43 @@ CREATE INDEX idx_orders_user ON orders(user_id);
 
 
 -- ======================================================
+-- ⚙️ Tabla: admin_permisos
+-- ======================================================
+
+CREATE TABLE admin_permisos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    modulo VARCHAR(50) NOT NULL, -- Ej: 'productos', 'banners', 'usuarios', 'config'
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ======================================================
 -- 🟢 DATOS INICIALES (NECESARIOS)
 -- ======================================================
 
--- 1. Insertar Categorías Base (Para que funcionen los botones del Admin)
+
+-- 1. Usuario Administrador Ceress
+INSERT INTO users (
+  uuid, 
+  nombres, 
+  apellidos, 
+  email, 
+  password_hash, 
+  role, 
+  estado_cuenta
+) VALUES (
+  UUID(), 
+  'Nuevo', 
+  'Admin', 
+  'thepinwin79@gmail.com',  
+  'CAMBIAR_LUEGO',          
+  'ADMIN', 
+  'CREADA'
+);
+
+-- 2. Insertar Categorías Base (Para que funcionen los botones del Admin)
 INSERT INTO categorias (id, nombre, descripcion) VALUES 
 (1, 'ROPA', 'Ropa y Accesorios institucionales'),
 (2, 'PAPELERIA', 'Útiles de oficina y papelería'),
@@ -204,23 +237,20 @@ INSERT INTO categorias (id, nombre, descripcion) VALUES
 (4, 'OTROS', 'Otros productos varios')
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 
--- 2. Configuración Inicial
+-- 3. Configuración Inicial
 INSERT INTO configuracion (clave, valor, descripcion)
 VALUES 
 ('about_us_text', 'Texto inicial de ejemplo para la sección Nosotros.', 'Texto mostrado en la sección Nosotros'),
 ('about_us_image', 'uploads/site/default_about.png', 'Imagen mostrada en la sección Nosotros')
 ON DUPLICATE KEY UPDATE valor = VALUES(valor);
 
--- 3. Usuario Administrador
-INSERT INTO users (
-  uuid, cedula, nombres, apellidos, email, password_hash, role, estado_cuenta
-) VALUES (
-  UUID(),
-  '0000000000',
-  'Admin',
-  'Principal',
-  'admin',
-  '$2y$10$nECG91OSvgBKs81GBHZbeujzUMv5SrDHc/WC/3TJuXf/h73IU7EnS', -- hash de "admin123"
-  'ADMIN',
-  'CREADA'
-);
+
+-- 4.  Asumiendo que ID 1 es el Super Admin
+INSERT INTO admin_permisos (user_id, modulo) VALUES 
+(1, 'banners'),
+(1, 'productos'),
+(1, 'contactos'),
+(1, 'compras'),
+(1, 'usuarios'),
+(1, 'reportes'),
+(1, 'configuracion');
