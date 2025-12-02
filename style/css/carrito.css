@@ -1,0 +1,306 @@
+/* --- ESTILOS MODERNOS CARRITO USGP --- */
+
+/* Variables de color para consistencia */
+:root {
+    --color-primario: #9e1b32; /* Rojo Institucional USGP */
+    --color-fondo: #f4f6f9;    /* Gris muy suave para el fondo */
+    --color-blanco: #ffffff;
+    --color-texto: #333333;
+    --color-verde: #28a745;    /* Para acciones positivas (pagar) */
+    --sombra: 0 8px 30px rgba(0,0,0,0.08); /* Sombra suave y moderna */
+}
+
+/* Fondo general de la página (si no lo hereda del main) */
+body {
+    background-color: var(--color-fondo);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Contenedor Principal (Tarjeta Flotante) --- */
+.carrito-contenedor {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--color-blanco);
+    border-radius: 15px;
+    box-shadow: var(--sombra);
+    animation: aparecer 0.5s ease-out;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    color: var(--color-texto);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- TABLA --- */
+.carrito-tabla {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px; /* Espacio real entre filas */
+}
+
+.carrito-tabla th {
+    text-align: left;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 10px 15px;
+    letter-spacing: 0.5px;
+}
+
+/* Estilo de cada fila de producto (Tarjeta individual) */
+.carrito-tabla tbody tr {
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carrito-tabla tbody tr:hover {
+    transform: translateY(-3px); /* Efecto de elevación al pasar el mouse */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    z-index: 10;
+}
+
+.carrito-tabla td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Bordes redondeados para los extremos de cada fila */
+.carrito-tabla td:first-child { 
+    border-left: 1px solid #f0f0f0; 
+    border-radius: 10px 0 0 10px; 
+}
+.carrito-tabla td:last-child { 
+    border-right: 1px solid #f0f0f0; 
+    border-radius: 0 10px 10px 0; 
+}
+
+/* --- INFORMACIÓN DEL PRODUCTO --- */
+.producto-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.carrito-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.producto-info span {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-texto);
+}
+
+/* --- CONTROLES DE CANTIDAD (+ -) --- */
+.cantidad-controles {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 5px;
+    width: fit-content;
+    border: 1px solid #e0e0e0;
+}
+
+.btn-cantidad {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.btn-cantidad:hover {
+    background: var(--color-primario);
+    color: white;
+    transform: scale(1.1);
+}
+
+.cantidad-controles span {
+    margin: 0 12px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* --- BOTÓN ELIMINAR --- */
+.btn-eliminar {
+    color: #dc3545; /* Rojo alerta */
+    font-size: 1.1rem;
+    padding: 8px;
+    display: inline-block;
+    transition: 0.2s;
+    background-color: #fff5f5;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px; /* Centrado vertical simple */
+}
+
+.btn-eliminar:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: rotate(90deg); /* Pequeña animación divertida */
+}
+
+/* --- SECCIÓN DE TOTALES --- */
+.carrito-totales {
+    margin-top: 30px;
+    margin-left: auto; /* Empuja el bloque a la derecha */
+    width: 100%;
+    max-width: 350px;
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.carrito-totales p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 1rem;
+}
+
+.carrito-totales p span {
+    font-weight: 600;
+    color: #333;
+}
+
+.total-final {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-primario);
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #eee;
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.btn-pagar {
+    display: block;
+    background: var(--color-verde);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.btn-pagar:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-volver {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: var(--color-primario);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.btn-volver:hover {
+    color: #7a1526;
+    text-decoration: underline;
+}
+
+/* --- ESTADO VACÍO --- */
+.carrito-vacio {
+    text-align: center;
+    padding: 60px 20px;
+    color: #777;
+}
+
+.carrito-vacio p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+/* --- RESPONSIVE (Móviles) --- */
+@media (max-width: 768px) {
+    .carrito-contenedor {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+
+    .carrito-tabla thead { display: none; } /* Ocultar cabeceras */
+    .carrito-tabla, .carrito-tabla tbody, .carrito-tabla tr, .carrito-tabla td { 
+        display: block; 
+        width: 100%; 
+    }
+
+    .carrito-tabla tr { 
+        margin-bottom: 20px; 
+        border: 1px solid #eee; 
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .carrito-tabla td { 
+        text-align: right; 
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .carrito-tabla td:last-child {
+        border-bottom: none;
+        justify-content: flex-end;
+    }
+
+    /* Etiquetas simuladas para móvil */
+    .carrito-tabla td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #999;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .producto-info { 
+        flex-direction: row; 
+    }
+}

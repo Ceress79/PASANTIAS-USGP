@@ -2,7 +2,7 @@
 include('bases/header.php');
 require_once "admin/db/conexion.php";
 
-// 1. Obtener el producto basado en el SLUG de la URL 
+// 1. Obtener el producto basado en el SLUG de la URL
 if (isset($_GET['slug'])) {
     $slug = $_GET['slug'];
     
@@ -20,7 +20,7 @@ if (isset($_GET['slug'])) {
         exit();
     }
 
-    // 2. Obtener las tallas 
+    // 2. Obtener las tallas
     $stmtVar = $pdo->prepare("SELECT * FROM variantes WHERE producto_id = ? ORDER BY FIELD(talla, 'S','M','L','XL')");
     $stmtVar->execute([$producto['id']]);
     $variantes = $stmtVar->fetchAll(PDO::FETCH_ASSOC);
@@ -36,7 +36,7 @@ if (isset($_GET['slug'])) {
 <div class="detalle-container">
     
     <div class="detalle-imagen">
-        <!-- Lógica de Zoom Original Intacta -->
+        <!-- Lógica de Zoom -->
         <div class="img-zoom-container">
             <img src="<?php echo !empty($producto['foto']) ? $producto['foto'] : 'style/img/placeholder.png'; ?>" 
                  alt="<?php echo htmlspecialchars($producto['nombre']); ?>" id="mainImage">
@@ -55,14 +55,12 @@ if (isset($_GET['slug'])) {
                         <?php echo $var['talla']; ?>
                     </button>
                 <?php endforeach; ?>
+                <!-- Input oculto para la talla -->
                 <input type="hidden" id="talla_seleccionada" name="talla_id">
             </div>
 
             <div class="acciones-detalle">
-                <!-- 
-                     CAMBIO SEGURO: Se añade el atributo data-producto-id.
-                     El resto de clases e IDs se mantienen igual.
-                -->
+                <!-- El ID se mantiene oculto en el atributo data, pero vital para que funcione -->
                 <button class="btn-anadir" 
                         id="btnAnadir" 
                         onclick="agregarAlCarrito()"
@@ -74,13 +72,14 @@ if (isset($_GET['slug'])) {
 
         </div>
         
-        <!-- Contenedor para mensajes  -->
-        <div id="mensaje-confirmacion" style="display:none; margin-top: 10px; text-align: center;"></div>
+        <!-- Contenedor para mensajes -->
+        <div id="mensaje-confirmacion" style="display:none; margin-top: 15px; text-align: center; font-weight: bold; padding: 10px; border-radius: 6px;"></div>
     </div>
 
     <div class="detalle-info">
         <h5 class="categoria-label">Ropa y Accesorios</h5>
         
+        <!-- Título limpio sin el ID visible -->
         <h1 class="titulo-producto"><?php echo htmlspecialchars($producto['nombre']); ?></h1> 
         
         <div class="descripcion">
@@ -94,53 +93,44 @@ if (isset($_GET['slug'])) {
 </div>
 
 <script>
-    // --- LÓGICA DE ZOOM  ---
+    // --- LÓGICA DE ZOOM ---
     const container = document.querySelector('.img-zoom-container');
     const img = document.getElementById('mainImage');
 
-    container.addEventListener('mousemove', function(e) {
-        const { left, top, width, height } = container.getBoundingClientRect();
-        const x = ((e.clientX - left) / width) * 100;
-        const y = ((e.clientY - top) / height) * 100;
-        img.style.transformOrigin = `${x}% ${y}%`;
-        img.style.transform = "scale(2)";
-    });
+    if (container && img) {
+        container.addEventListener('mousemove', function(e) {
+            const { left, top, width, height } = container.getBoundingClientRect();
+            const x = ((e.clientX - left) / width) * 100;
+            const y = ((e.clientY - top) / height) * 100;
+            img.style.transformOrigin = `${x}% ${y}%`;
+            img.style.transform = "scale(2)";
+        });
 
-    container.addEventListener('mouseleave', function() {
-        img.style.transformOrigin = "center center";
-        img.style.transform = "scale(1)";
-    });
+        container.addEventListener('mouseleave', function() {
+            img.style.transformOrigin = "center center";
+            img.style.transform = "scale(1)";
+        });
+    }
 
-    // --- LÓGICA TALLAS  ---
+    // --- LÓGICA TALLAS ---
     function seleccionarTalla(btn) {
         if (btn.classList.contains('agotado')) return;
         document.querySelectorAll('.talla-btn').forEach(b => b.classList.remove('seleccionado'));
         btn.classList.add('seleccionado');
         document.getElementById('talla_seleccionada').value = btn.getAttribute('data-id');
+        
+        const msg = document.getElementById('mensaje-confirmacion');
+        if(msg) msg.style.display = 'none';
     }
 
-    // --- LÓGICA AGREGAR AL CARRITO  ---
+    // --- LÓGICA AGREGAR AL CARRITO (Versión Producción) ---
     function agregarAlCarrito() {
         const btnAnadir = document.getElementById('btnAnadir');
         const tallaId = document.getElementById('talla_seleccionada').value;
         const productoId = btnAnadir.getAttribute('data-producto-id');
         const mensajeConfirmacion = document.getElementById('mensaje-confirmacion');
 
-        // 1. Validación 
-        if (!tallaId) {
-            // Estilos inline para asegurar feedback
-            mensajeConfirmacion.style.color = '#721c24'; // Rojo oscuro
-            mensajeConfirmacion.style.backgroundColor = '#f8d7da'; // Fondo rojizo
-            mensajeConfirmacion.style.padding = '10px';
-            mensajeConfirmacion.style.borderRadius = '5px';
-            mensajeConfirmacion.innerHTML = 'Por favor, selecciona una talla primero.';
-            mensajeConfirmacion.style.display = 'block';
-            
-            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
-            return;
-        }
-
-        // 2. Envío de datos al backend (AJAX)
+        // Datos a enviar
         const data = new URLSearchParams();
         data.append('accion', 'agregar_producto');
         data.append('producto_id', productoId);
@@ -150,38 +140,52 @@ if (isset($_GET['slug'])) {
             method: 'POST',
             body: data
         })
-        .then(response => response.json())
+        .then(response => {
+            // Procesamos la respuesta intentando limpiar cualquier "ruido" externo
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error("Respuesta inesperada:", text); // Solo visible en consola del desarrollador
+                    throw new Error("Hubo un problema al procesar la respuesta del servidor.");
+                }
+            });
+        })
         .then(data => {
-            mensajeConfirmacion.style.padding = '10px';
-            mensajeConfirmacion.style.borderRadius = '5px';
-
             if (data.exito) {
-                // Éxito
-                mensajeConfirmacion.style.color = '#155724'; // Verde oscuro
-                mensajeConfirmacion.style.backgroundColor = '#d4edda'; // Fondo verdoso
-                mensajeConfirmacion.innerHTML = '¡Producto añadido al carrito!';
+                // ÉXITO
+                mensajeConfirmacion.style.backgroundColor = '#d4edda';
+                mensajeConfirmacion.style.color = '#155724';
                 
-                // Actualizar contador del header si existe
+                if (tallaId) {
+                    mensajeConfirmacion.innerHTML = '<i class="fas fa-check-circle"></i> ¡Producto añadido correctamente!';
+                } else {
+                    mensajeConfirmacion.innerHTML = '<i class="fas fa-check-circle"></i> Añadido. ⚠️ Recuerda elegir la talla en el carrito.';
+                }
+                
+                // Actualizar contador del header
                 const cartCount = document.querySelector('.cart-count');
                 if (cartCount) {
                     cartCount.textContent = data.articulos;
                 }
             } else {
-                // Error lógico
-                mensajeConfirmacion.style.color = '#721c24';
+                // Error de negocio (ej: sin stock)
                 mensajeConfirmacion.style.backgroundColor = '#f8d7da';
-                mensajeConfirmacion.innerHTML = 'Error: ' + data.mensaje;
+                mensajeConfirmacion.style.color = '#721c24';
+                mensajeConfirmacion.innerHTML = '⚠️ ' + data.mensaje;
             }
             
             mensajeConfirmacion.style.display = 'block';
-            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
+            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 4000);
         })
         .catch(error => {
             console.error('Error:', error);
-            mensajeConfirmacion.style.color = 'red';
-            mensajeConfirmacion.innerHTML = 'Error de conexión.';
+            // Error técnico (mensaje amigable para el usuario)
+            mensajeConfirmacion.style.backgroundColor = '#f8d7da';
+            mensajeConfirmacion.style.color = '#721c24';
+            mensajeConfirmacion.innerHTML = '❌ Ocurrió un error al conectar con el carrito.';
             mensajeConfirmacion.style.display = 'block';
-            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
+            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 4000);
         });
     }
 </script>
