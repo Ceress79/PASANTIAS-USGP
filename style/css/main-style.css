@@ -1,4 +1,6 @@
-/* --- Reseteo y Estilos Globales --- */
+/* ========================================= */
+/* 1. RESETEO Y ESTILOS GLOBALES             */
+/* ========================================= */
 body {
     margin: 0;
     font-family: 'Corbel', sans-serif;
@@ -16,7 +18,9 @@ h1, h2 {
     margin: 0 auto;
 }
 
-/* --- Encabezado --- */
+/* ========================================= */
+/* 2. ENCABEZADO (HEADER)                    */
+/* ========================================= */
 .top-bar {
     background-color: #B51E35;
     padding: 10px 0;
@@ -26,7 +30,6 @@ h1, h2 {
     height: 50px;
 }
 
-/* Header fijo */
 header {
     position: fixed;
     top: 0;
@@ -34,6 +37,7 @@ header {
     right: 0;
     z-index: 1000;
     background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 main {
@@ -45,6 +49,7 @@ main {
     background-color: #fff;
     border-bottom: 1px solid #e0e0e0;
     padding: 10px 0;
+    position: relative;
 }
 
 .main-nav .container {
@@ -53,7 +58,20 @@ main {
     align-items: center;
 }
 
-.main-nav ul {
+/* Botón Hamburguesa (Móvil) */
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* --- CORRECCIÓN IMPORTANTE AQUÍ --- */
+/* Antes era ".main-nav ul", ahora usamos el ID específico "#main-menu" */
+/* Esto evita que afecte al menú del perfil */
+#main-menu {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -61,30 +79,30 @@ main {
     gap: 30px;
 }
 
-.main-nav a {
+#main-menu a {
     text-decoration: none;
     color: #333;
     font-size: 16px;
     padding: 10px 0;
 }
 
-.main-nav a:hover {
+#main-menu a:hover {
     color: #B51E35;
 }
 
-.main-nav a.active {
+#main-menu a.active {
     color: #B51E35;
     font-weight: 600;
-    position: relative;
 }
 
-/* Iconos de Navegación */
+/* Zona de Iconos (Derecha) */
 .nav-icons {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
+/* Carrito */
 .cart-icon {
     display: flex;
     align-items: center;
@@ -112,8 +130,10 @@ main {
     font-weight: bold;
 }
 
+/* ========================================= */
+/* 3. SECCIONES (HERO, NOSOTROS, PRODUCTOS)  */
+/* ========================================= */
 
-/* --- Sección Hero (Banner) --- */
 .hero-section {
     position: relative;
     width: 100%;
@@ -137,404 +157,183 @@ main {
     transition: opacity 1.5s ease-in-out;
 }
 
-.slide.active {
-    opacity: 1;
-}
-
-.slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.slide.active { opacity: 1; }
+.slide img { width: 100%; height: 100%; object-fit: cover; }
 
 .hero-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    background-color: rgba(30, 30, 30, 0.4);
-    z-index: 2;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; align-items: center; background-color: rgba(30, 30, 30, 0.4); z-index: 2;
 }
 
 .hero-text {
-    padding: 20px;
-    max-width: 600px;
-    margin-left: 10%;
-    color: #fff;
+    padding: 20px; max-width: 600px; margin-left: 10%; color: #fff;
 }
 
-.hero-text h1 {
-    font-size: 28px;
-    line-height: 1.4;
-    font-weight: 400;
-}
+.hero-text h1 { font-size: 28px; line-height: 1.4; font-weight: 400; }
 
 .slider-dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 12px;
-    position: relative;
-    z-index: 10;
+    display: flex; justify-content: center; gap: 8px; margin-top: 12px; position: relative; z-index: 10;
 }
 
 .slider-dots .dot {
-    width: 12px;
-    height: 12px;
-    background-color: #000;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 12px; height: 12px; background-color: #000; border-radius: 50%;
+    cursor: pointer; transition: background-color 0.3s ease, transform 0.2s ease;
 }
+.slider-dots .dot.active { background-color: #B51E35; transform: scale(1.2); }
 
-.slider-dots .dot.active {
-    background-color: #B51E35;
-    transform: scale(1.2);
-}
-
-/* --- Sección Nosotros --- */
-.about-section {
-    width: 100%;
-    padding: 60px 0;
-    background-color: #ffffff;
-}
-
+/* Sección Nosotros */
+.about-section { width: 100%; padding: 60px 0; background-color: #ffffff; }
 .about-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    gap: 30px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; 
+    align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; gap: 30px;
 }
+.about-text { flex: 1; min-width: 300px; }
+.about-text h2 { font-size: 2.5em; margin-bottom: 20px; color: #333; }
+.about-text p { font-size: 1.1em; line-height: 1.6; color: #555; max-width: 500px; }
+.about-image { flex: 1; min-width: 300px; text-align: center; }
+.about-image img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
 
-.about-text {
-    flex: 1;
-    min-width: 300px;
-}
+/* Productos */
+.products-section { width: 90%; max-width: 1200px; margin: 50px auto; }
+.products-section h2 { font-size: 32px; margin-bottom: 5px; }
+.category-subtitle { margin-top: 0; color: #555; font-size: 18px; }
 
-.about-text h2 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    color: #333;
-}
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+.product-card { background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; text-align: center; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
+.product-image-container { position: relative; overflow: hidden; }
+.product-image { width: 100%; height: 300px; object-fit: cover; transition: transform 0.3s ease; }
+.product-card:hover .product-image { transform: scale(1.05); }
+.product-info { padding: 20px; }
+.product-name { font-size: 18px; margin: 10px 0 5px; color: #333; font-weight: 500; }
+.product-price { font-size: 20px; color: #B51E35; font-weight: bold; margin: 5px 0 20px; }
 
-.about-text p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: #555;
-    max-width: 500px;
-}
+.product-actions { display: flex; flex-direction: column; gap: 10px; }
+.add-to-cart, .buy-now { padding: 12px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+.add-to-cart { background-color: #f8f9fa; color: #333; border: 2px solid #e9ecef; }
+.add-to-cart:hover { background-color: #e9ecef; }
+.buy-now { background-color: #B51E35; color: white; }
+.buy-now:hover:not(:disabled) { background-color: #9a1a2d; }
+.buy-now:disabled { background-color: #cccccc; cursor: not-allowed; }
 
-.about-image {
-    flex: 1;
-    min-width: 300px;
-    text-align: center;
-}
-
-.about-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* --- Productos --- */
-.products-section {
-    width: 90%;
-    max-width: 1200px;
-    margin: 50px auto;
-}
-
-.products-section h2 {
-    font-size: 32px;
-    margin-bottom: 5px;
-}
-
-.category-subtitle {
-    margin-top: 0;
-    color: #555;
-    font-size: 18px;
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-}
-
-.product-card {
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    text-align: center;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-}
-
-.product-image-container {
-    position: relative;
-    overflow: hidden;
-}
-
-.product-image {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.product-card:hover .product-image {
-    transform: scale(1.05);
-}
-
-.product-info {
-    padding: 20px;
-}
-
-.product-name {
-    font-size: 18px;
-    margin: 10px 0 5px;
-    color: #333;
-    font-weight: 500;
-}
-
-.product-price {
-    font-size: 20px;
-    color: #B51E35;
-    font-weight: bold;
-    margin: 5px 0 20px;
-}
-
-.product-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.add-to-cart, .buy-now {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.add-to-cart {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 2px solid #e9ecef;
-}
-
-.add-to-cart:hover {
-    background-color: #e9ecef;
-}
-
-.buy-now {
-    background-color: #B51E35;
-    color: white;
-}
-
-.buy-now:hover:not(:disabled) {
-    background-color: #9a1a2d;
-}
-
-.buy-now:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-@media (max-width: 1024px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-    .about-content {
-        flex-direction: column;
-    }
-    .about-text {
-        text-align: center;
-    }
-}
-
-/* ========================================================= */
-/* ===  ESTILOS DEL MENÚ DESPLEGABLE (POPUP USER)        === */
-/* ========================================================= */
+/* ========================================= */
+/* 4. MENÚ DE USUARIO (POPUP)                */
+/* ========================================= */
 
 .popup {
-  --nav-padding-x: 0.25em;
-  --nav-padding-y: 0.625em;
-  --nav-border-radius: 0.375em;
-  --nav-border-color: #ccc;
-  --nav-border-width: 0.0625em;
-  --nav-shadow-color: rgba(0, 0, 0, .2);
-  --nav-shadow-width: 0 1px 5px;
-  --nav-bg: #eee;
-  --nav-font-family: 'Corbel', sans-serif;
-  --nav-default-scale: .8;
-  --nav-active-scale: 1;
-  --nav-position-left: unset;
-  --nav-position-right: 0;
-  --nav-title-size: 0.625em;
-  --nav-title-color: #777;
-  --nav-title-padding-x: 1rem;
-  --nav-title-padding-y: 0.25em;
-  --nav-button-padding-x: 1rem;
-  --nav-button-padding-y: 0.375em;
-  --nav-button-border-radius: 0.375em;
-  --nav-button-font-size: 12px;
-  --nav-button-hover-bg: #B51E35;
-  --nav-button-hover-text-color: #fff;
-  --nav-button-distance: 0.875em;
-  --underline-border-width: 0.0625em;
-  --underline-border-color: #ccc;
-  --underline-margin-y: 0.3125em;
+  --nav-bg: #eee; --nav-font-family: 'Corbel', sans-serif;
+  --nav-button-hover-bg: #B51E35; --nav-button-hover-text-color: #fff;
   --burger-transition: all .2s ease-in-out; 
 }
 
-/* --- CAMBIO: display FLEX para poner texto e icono juntos --- */
 .popup {
   display: flex;
   align-items: center;
-  gap: 8px; /* Espacio entre "No iniciado" y el ícono */
-  text-rendering: optimizeLegibility;
+  gap: 8px; 
   position: relative;
   z-index: 1001;
   cursor: pointer;
 }
 
-.popup input {
-  display: none;
-}
+.popup input { display: none; }
 
-/* --- Estilo para el texto "No iniciado" --- */
+/* Texto "No iniciado" */
 .status-text {
   font-size: 14px;
   color: #666;
   white-space: nowrap;
 }
 
-/* --- ESTILO DEL BOTÓN ACTIVADOR (La personita) --- */
+/* Icono Personita */
 .burger {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 22px;
-  color: #333;
-  padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none; cursor: pointer;
+  font-size: 22px; color: #333; padding: 0;
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.burger:hover {
-  color: #B51E35;
-  transform: scale(1.1);
-}
+.burger:hover { color: #B51E35; transform: scale(1.1); }
+.popup input:checked + .burger { color: #B51E35; }
 
-.popup input:checked + .burger {
-    color: #B51E35;
-}
-
-/* --- VENTANA DESPLEGABLE --- */
+/* Ventana Desplegable (SOLO ESTA LISTA DEBE MOSTRARSE EN EL POPUP) */
 .popup-window {
-  transform: scale(var(--nav-default-scale));
-  visibility: hidden;
-  opacity: 0;
+  transform: scale(0.8); visibility: hidden; opacity: 0;
   position: absolute;
-  padding: var(--nav-padding-y) var(--nav-padding-x);
-  background: var(--nav-bg);
-  font-family: var(--nav-font-family);
-  color: var(--nav-text-color);
-  border-radius: var(--nav-border-radius);
-  box-shadow: var(--nav-shadow-width) var(--nav-shadow-color);
-  border: var(--nav-border-width) solid var(--nav-border-color);
-  
-  /* Posición: debajo y a la derecha */
-  top: 100%; 
-  margin-top: 10px;
-  right: 0;
-  
+  top: 100%; right: 0; margin-top: 15px;
+  background: #fff; border: 1px solid #ccc; border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  padding: 10px; min-width: 180px;
   transition: var(--burger-transition);
-  min-width: 160px;
 }
 
 .popup-window legend {
-  padding: var(--nav-title-padding-y) var(--nav-title-padding-x);
-  margin: 0;
-  color: var(--nav-title-color);
-  font-size: var(--nav-title-size);
-  text-transform: uppercase;
+  padding: 5px 10px; margin: 0; color: #777; font-size: 10px; text-transform: uppercase;
 }
 
-.popup-window ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
+.popup-window ul { margin: 0; padding: 0; list-style-type: none; }
 
 .popup-window ul button {
-  outline: none;
-  width: 100%;
-  border: none;
-  background: none;
-  display: flex;
-  align-items: center;
-  color: #333;
-  font-size: var(--nav-button-font-size);
-  padding: var(--nav-button-padding-y) var(--nav-button-padding-x);
-  white-space: nowrap;
-  border-radius: var(--nav-button-border-radius);
-  cursor: pointer;
-  column-gap: var(--nav-button-distance);
-  transition: background 0.2s;
+  width: 100%; border: none; background: none;
+  display: flex; align-items: center; gap: 10px;
+  color: #333; font-size: 14px; padding: 10px;
+  border-radius: 4px; cursor: pointer; transition: background 0.2s;
 }
 
-/* Iconos en rojo */
-.popup-window ul li svg {
-  color: #B51E35; 
+.popup-window ul li svg { color: #B51E35; }
+.popup-window hr { margin: 5px 0; border: none; border-bottom: 1px solid #eee; }
+
+.popup-window ul button:hover {
+  background: #B51E35; color: #fff;
+}
+.popup-window ul button:hover svg { color: #fff; }
+
+.popup input:checked ~ nav {
+  transform: scale(1); visibility: visible; opacity: 1;
 }
 
-.popup-window hr {
-  margin: var(--underline-margin-y) 0;
-  border: none;
-  border-bottom: var(--underline-border-width) solid var(--underline-border-color);
+/* ========================================= */
+/* 5. RESPONSIVIDAD (MEDIA QUERIES)          */
+/* ========================================= */
+
+@media (max-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.popup-window ul button:hover,
-.popup-window ul button:focus-visible {
-  color: var(--nav-button-hover-text-color);
-  background: var(--nav-button-hover-bg);
-}
+@media (max-width: 768px) {
+    .product-grid { grid-template-columns: 1fr; }
+    .about-content { flex-direction: column; }
+    .about-text { text-align: center; }
+    .hero-text { margin-left: 20px; }
+    .hero-text h1 { font-size: 22px; }
 
-.popup-window ul button:hover svg,
-.popup-window ul button:focus-visible svg {
-    color: #fff;
-}
+    /* HEADER MÓVIL */
+    .mobile-toggle { display: block; }
+    .status-text { display: none; }
 
-.popup input:checked~nav {
-  transform: scale(var(--nav-active-scale));
-  visibility: visible;
-  opacity: 1;
+    /* --- CORRECCIÓN FINAL --- */
+    /* Aquí aplicamos display: none SOLO al #main-menu */
+    /* Dejamos en paz al menú del perfil */
+    #main-menu {
+        display: none; /* Se oculta solo el menú principal */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%; left: 0;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        padding: 0;
+        z-index: 999;
+        gap: 0;
+        border-top: 1px solid #eee;
+    }
+
+    /* Clase active para abrir menú principal */
+    #main-menu.active { display: flex; }
+
+    #main-menu li { width: 100%; text-align: center; }
+
+    #main-menu li a {
+        display: block; padding: 15px 0;
+        border-bottom: 1px solid #f9f9f9;
+    }
 }

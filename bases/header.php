@@ -1,10 +1,12 @@
 <?php
 // 1. CONTROL DE SESIÓN
+// Si no hay sesión iniciada, la iniciamos.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 // 2. DETECCIÓN DE RUTAS
+// Define si debemos usar "../" o "./" dependiendo de la carpeta donde estemos
 $nivel = (strpos($_SERVER['PHP_SELF'], '/usuario/') !== false) ? '../' : './';
 $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
 ?>
@@ -33,7 +35,12 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
         
         <nav class="main-nav">
             <div class="container">
-                <ul>
+                
+                <button class="mobile-toggle" id="btn-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul id="main-menu">
                     <li><a href="<?php echo $nivel; ?>index.php" class="<?php echo ($pagina_actual == 'index.php') ? 'active' : ''; ?>">Portada</a></li>
                     <li><a href="<?php echo $nivel; ?>ropa_accesorio.php" class="<?php echo ($pagina_actual == 'ropa_accesorio.php') ? 'active' : ''; ?>">Ropa y accesorio</a></li>
                     <li><a href="<?php echo $nivel; ?>papeleria.php" class="<?php echo ($pagina_actual == 'papeleria.php') ? 'active' : ''; ?>">Papelería</a></li>
@@ -113,3 +120,16 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
         </nav>
 
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnMenu = document.getElementById('btn-menu');
+            const mainMenu = document.getElementById('main-menu');
+
+            if(btnMenu && mainMenu) {
+                btnMenu.addEventListener('click', function() {
+                    mainMenu.classList.toggle('active');
+                });
+            }
+        });
+    </script>
