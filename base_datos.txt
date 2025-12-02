@@ -2,7 +2,7 @@
 -- 🌐 BASE DE DATOS: usgpcommerce
 -- ======================================================
 
-drop database if  EXISTS usgpcommerce;
+DROP DATABASE IF EXISTS usgpcommerce;
 
 CREATE DATABASE IF NOT EXISTS usgpcommerce
   DEFAULT CHARACTER SET utf8mb4
@@ -59,9 +59,12 @@ CREATE TABLE productos (
     slug VARCHAR(200) UNIQUE,
     descripcion TEXT,
     
-    -- Campos añadidos para ficha técnica:
+    -- Campos para ficha técnica:
     material VARCHAR(150) NULL,
     dimensiones VARCHAR(150) NULL,
+    
+    -- ✅ CAMBIO NUEVO: Campo para guardar la tabla de medidas dinámica (JSON)
+    medidas_json TEXT NULL,
 
     precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     categoria_id INT NULL,
@@ -79,7 +82,7 @@ CREATE TABLE variantes (
     id CHAR(36) CHARACTER SET ascii PRIMARY KEY,
     producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
     
-    -- CAMBIO IMPORTANTE: VARCHAR para aceptar "S", "38", "ÚNICA", etc.
+    -- VARCHAR para aceptar "S", "38", "ÚNICA", etc.
     talla VARCHAR(50) NOT NULL, 
     
     stock INT NOT NULL DEFAULT 0,
@@ -173,19 +176,20 @@ CREATE TABLE configuracion (
   descripcion VARCHAR(255) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Índices útiles
-CREATE INDEX idx_productos_categoria ON productos(categoria_id);
-CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
-CREATE INDEX idx_orders_user ON orders(user_id);
-
 -- ======================================================
--- ⚙️ Tabla: Contactos
+-- 📞 Tabla: contactos (Añadida según tu versión anterior)
 -- ======================================================
 CREATE TABLE contactos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   tipo ENUM('email','telefono') NOT NULL,
   valor VARCHAR(255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Índices útiles
+CREATE INDEX idx_productos_categoria ON productos(categoria_id);
+CREATE INDEX idx_fotos_useruuid ON fotos(user_uuid);
+CREATE INDEX idx_orders_user ON orders(user_id);
 
 
 -- ======================================================

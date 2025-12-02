@@ -6,9 +6,9 @@ if (!isset($_SESSION['admin_id'])) {
 }
 require_once "db/conexion.php";
 
-// 1. DETERMINAR CATEGORÍA ACTUAL (Por defecto 1 = Ropa)
+// 1. DETERMINAR CATEGORÍA ACTUAL
 $cat_actual = isset($_GET['cat']) ? (int)$_GET['cat'] : 1;
-if ($cat_actual < 1 || $cat_actual > 4) $cat_actual = 1; // 1-4 son validos
+if ($cat_actual < 1 || $cat_actual > 4) $cat_actual = 1; 
 
 $nombres_cat = [1 => 'Ropa y Accesorios', 2 => 'Papelería', 3 => 'Hogar', 4 => 'Otros'];
 $nombre_cat_actual = $nombres_cat[$cat_actual];
@@ -19,7 +19,7 @@ $mostrar_formulario = false;
 
 $valores = [
     'nombre' => '', 'precio' => '', 'descripcion' => '', 'material' => '', 'dimensiones' => '',
-    'stock_unico' => 0, 'tipo_stock' => ''
+    'stock_unico' => 0, 'tipo_stock' => '', 'medidas' => [] // Array para medidas
 ];
 $accion_form = 'crear_producto';
 $titulo_form = 'Añadir Nuevo Producto';
@@ -52,6 +52,10 @@ if (isset($_GET['edit_id'])) {
         $valores = array_merge($valores, $producto_editar);
         $valores['stock_unico'] = $variantes_db['ÚNICA'] ?? 0;
         
+        // --- DECODIFICAR JSON DE MEDIDAS ---
+        $valores['medidas'] = json_decode($producto_editar['medidas_json'] ?? '{}', true);
+
+        // Deducir tipo de stock
         if(isset($variantes_db['S'])) $valores['tipo_stock'] = 'ropa';
         elseif(isset($variantes_db['38'])) $valores['tipo_stock'] = 'calzado';
         elseif(isset($variantes_db['28'])) $valores['tipo_stock'] = 'pantalones';
@@ -77,6 +81,16 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/Aproductos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos extra para la tabla de medidas dentro del formulario */
+        .tabla-medidas { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        .tabla-medidas th { background: #f0f0f0; padding: 8px; font-size: 13px; text-align: center; border: 1px solid #ddd; }
+        .tabla-medidas td { padding: 5px; border: 1px solid #ddd; text-align: center; }
+        .tabla-medidas input { width: 100%; border: none; text-align: center; padding: 5px; margin: 0; outline: none; background: transparent; }
+        .tabla-medidas input:focus { background: #eef; }
+        .titulo-seccion { color: #555; font-size: 14px; font-weight: bold; margin-bottom: 5px; display: block; }
+        .info-text { font-size: 12px; color: #666; margin-bottom: 10px; display: block; }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -97,7 +111,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="header-actions">
-                <h2 style="margin:0; color:#333;">Listado para: <?php echo $nombre_cat_actual; ?></h2>
+                <h2 style="margin:0; color:#333;">Listado: <?php echo $nombre_cat_actual; ?></h2>
                 <?php if (!$mostrar_formulario): ?>
                     <button class="btn-add-new" onclick="toggleForm()">
                         <i class="fas fa-plus"></i> Añadir Nuevo Producto
@@ -150,28 +164,68 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                     <div id="containerStocks">
+                        
                         <div id="stock_unico" class="stock-group <?php echo ($cat_actual == 1 && $valores['tipo_stock'] != 'unico') ? 'hidden' : ''; ?>">
                             <label style="color:#007bff; font-weight:bold;">Stock Total (Unidades):</label>
                             <input type="number" name="stock_unico_cant" value="<?php echo $valores['stock_unico']; ?>" min="0" style="width:120px;">
                         </div>
 
                         <?php if ($cat_actual == 1): ?>
+                            
                             <div id="stock_ropa" class="stock-group hidden">
-                                <label style="color:#a91e2c; font-weight:bold;">Tallas (S - XL):</label><br><br>
-                                <div class="stock-inputs">
-                                    <?php foreach (['S', 'M', 'L', 'XL'] as $t): ?>
-                                        <div class="stock-item"><label><?php echo $t; ?></label><input type="number" name="stock_<?php echo strtolower($t); ?>" value="<?php echo $variantes_db[$t] ?? 0; ?>" min="0"></div>
-                                    <?php endforeach; ?>
-                                </div>
+                                <span class="titulo-seccion">1. Inventario y Tabla de Medidas (S - XL)</span>
+                                <span class="info-text">Edita los títulos (ej: Pecho, Largo) y pon las medidas en cm.</span>
+                                
+                                <table class="tabla-medidas">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:50px;">Talla</th>
+                                            <th style="width:70px;">Stock</th>
+                                            <th>
+                                                <input type="text" name="header_1" value="<?php echo $valores['medidas']['nombres'][0] ?? 'Ancho (cm)'; ?>" placeholder="Nombre Medida 1" style="font-weight:bold; color:#333; background:#fff; border:1px solid #ccc;">
+                                            </th>
+                                            <th>
+                                                <input type="text" name="header_2" value="<?php echo $valores['medidas']['nombres'][1] ?? 'Largo (cm)'; ?>" placeholder="Nombre Medida 2" style="font-weight:bold; color:#333; background:#fff; border:1px solid #ccc;">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach (['S', 'M', 'L', 'XL'] as $t): ?>
+                                            <tr>
+                                                <td><b><?php echo $t; ?></b></td>
+                                                <td><input type="number" name="stock_<?php echo strtolower($t); ?>" value="<?php echo $variantes_db[$t] ?? 0; ?>" min="0" style="background:#f9f9f9;"></td>
+                                                <td><input type="text" name="medidas[<?php echo $t; ?>][m1]" value="<?php echo $valores['medidas'][$t]['m1'] ?? ''; ?>" placeholder="-"></td>
+                                                <td><input type="text" name="medidas[<?php echo $t; ?>][m2]" value="<?php echo $valores['medidas'][$t]['m2'] ?? ''; ?>" placeholder="-"></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
+
                             <div id="stock_pantalones" class="stock-group hidden">
-                                <label style="color:#a91e2c; font-weight:bold;">Tallas Jeans (28 - 36):</label><br><br>
-                                <div class="stock-inputs">
-                                    <?php for ($i = 28; $i <= 36; $i += 2): ?>
-                                        <div class="stock-item"><label><?php echo $i; ?></label><input type="number" name="stock_pant_<?php echo $i; ?>" value="<?php echo $variantes_db[(string)$i] ?? 0; ?>" min="0"></div>
-                                    <?php endfor; ?>
-                                </div>
+                                <span class="titulo-seccion">1. Inventario y Medidas (Jeans)</span>
+                                <table class="tabla-medidas">
+                                    <thead>
+                                        <tr>
+                                            <th>Talla</th>
+                                            <th>Stock</th>
+                                            <th>Cintura (cm)</th>
+                                            <th>Largo (cm)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php for ($i = 28; $i <= 36; $i += 2): ?>
+                                            <tr>
+                                                <td><b><?php echo $i; ?></b></td>
+                                                <td><input type="number" name="stock_pant_<?php echo $i; ?>" value="<?php echo $variantes_db[(string)$i] ?? 0; ?>" min="0" style="background:#f9f9f9;"></td>
+                                                <td><input type="text" name="medidas[<?php echo $i; ?>][cintura]" value="<?php echo $valores['medidas'][$i]['cintura'] ?? ''; ?>" placeholder="-"></td>
+                                                <td><input type="text" name="medidas[<?php echo $i; ?>][largo]" value="<?php echo $valores['medidas'][$i]['largo'] ?? ''; ?>" placeholder="-"></td>
+                                            </tr>
+                                        <?php endfor; ?>
+                                    </tbody>
+                                </table>
                             </div>
+
                             <div id="stock_calzado" class="stock-group hidden">
                                 <label style="color:#a91e2c; font-weight:bold;">Tallas Calzado (38 - 44):</label><br><br>
                                 <div class="stock-inputs">
@@ -184,7 +238,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <label>Foto:</label><br>
+                        <label>Foto Principal:</label><br>
                         <input type="file" name="foto" accept="image/*" <?php echo $foto_required; ?>>
                     </div>
 
@@ -247,10 +301,12 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="js/Aproductos.js"></script>
     <script>
-        // Inicializar lógica específica de la página
         document.addEventListener("DOMContentLoaded", function() {
-            // Pasamos true si es categoría 1 (Ropa), false si no
-            initProductos(<?php echo ($cat_actual == 1) ? 'true' : 'false'; ?>);
+            <?php if ($cat_actual == 1): ?>
+                initProductos(true);
+            <?php else: ?>
+                initProductos(false);
+            <?php endif; ?>
         });
     </script>
 </body>

@@ -220,3 +220,37 @@
         gap: 30px;
     }
 }
+
+/* --- TABLA DE TALLAS --- */
+.guia-tallas-container {
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.tabla-tallas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #eee;
+}
+
+.tabla-tallas th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-tallas td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.talla-bold {
+    font-weight: bold;
+    background-color: #fafafa;
+}
