@@ -83,7 +83,7 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
                         <input type="checkbox">
                         
                         <?php if (!isset($_SESSION['user_id'])): ?>
-                            <span class="status-text">No iniciado</span>
+                            <span class="status-text">Iniciar Sesion</span>
                         <?php endif; ?>
 
                         <div class="burger" tabindex="0">

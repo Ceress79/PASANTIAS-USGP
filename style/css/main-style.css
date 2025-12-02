@@ -337,3 +337,32 @@ main {
         border-bottom: 1px solid #f9f9f9;
     }
 }
+
+
+/* ==== HOVER PARA ICONOS DE USUARIO Y CARRITO ==== */
+.nav-icons i {
+    transition: color 0.3s ease;
+}
+
+.nav-icons i:hover {
+    color: #B51E35;  /* Color igual al hover del menú */
+}
+
+/* Para el texto "Iniciar sesión" */
+.status-text {
+    transition: color 0.3s ease;
+}
+
+.status-text:hover {
+    color: #B51E35;
+}
+
+/* Para el botón dentro del popup */
+.popup .burger:hover i {
+    color: #B51E35;
+}
+
+/* Carrito */
+.cart-icon:hover i {
+    color: #B51E35;
+}
