@@ -38,13 +38,13 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
 
             <?php if (isset($_SESSION['user_id'])): ?>
                 <!-- Si el usuario está conectado -->
-                <a href="usuario/perfil.php" class="user-login">
+                <a href="../usuario/perfil.php" class="user-login">
                     <i class="fas fa-user-circle"></i>
                     <span>Perfil</span>
                 </a>
             <?php else: ?>
                 <!-- Si NO está conectado -->
-                <a href="usuario/login.php" class="user-login">
+                <a href="../usuario/login.php" class="user-login">
                     <i class="fas fa-user"></i>
                     <span>Iniciar Sesión / Registrarse</span>
                 </a>

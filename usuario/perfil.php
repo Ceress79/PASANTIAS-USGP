@@ -1,5 +1,6 @@
 <?php
 session_start();
+include('../bases/header.php');
 require_once "../admin/db/conexion.php";
 
 // Si NO hay sesión → redirigir al login
