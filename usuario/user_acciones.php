@@ -69,6 +69,8 @@ if ($accion === "register") {
 | 2. LOGIN DE USUARIO
 |--------------------------------------------------------------------------
 */
+
+
 if ($accion === "login") {
 
     $email    = trim($_POST['email']);

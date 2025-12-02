@@ -50,6 +50,14 @@ if (isset($_SESSION['login_error_user'])) {
                 <input type="password" name="password" placeholder="Contraseña" required>
             </div>
 
+            <div style="text-align: right; margin-bottom: 10px;">
+<a href="cambiar_contrasenia.php" class="olvidar-pass">
+    ¿Olvidaste tu contraseña?
+</a>
+            </div>
+
+
+
             <button type="submit" class="btn-login">Ingresar</button>
 
             <p style="margin-top:15px;">

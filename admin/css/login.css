@@ -137,3 +137,38 @@ body {
     90% { opacity: 1; }
     100% { opacity: 0; transform: translateY(-20px); }
 }
+
+
+.olvidar-pass {
+    font-size: 0.9em;
+    color: #555;
+    position: relative;
+    text-decoration: none !important; /* Mata el subrayado */
+    transition: color 0.3s ease;
+}
+
+.olvidar-pass:visited,
+.olvidar-pass:active,
+.olvidar-pass:focus,
+.olvidar-pass:hover {
+    text-decoration: none !important; /* Por si acaso */
+}
+
+.olvidar-pass::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: #e50000;
+    transition: width 0.3s ease;
+}
+
+.olvidar-pass:hover {
+    color: #e50000;
+}
+
+.olvidar-pass:hover::after {
+    width: 100%;
+}

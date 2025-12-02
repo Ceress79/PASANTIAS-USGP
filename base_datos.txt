@@ -27,8 +27,14 @@ CREATE TABLE users (
     provincia VARCHAR(100) DEFAULT NULL,
     ciudad VARCHAR(100) DEFAULT NULL,
     fecha_nacimiento DATE DEFAULT NULL,
+
+    -- 🔐 Campos añadidos para recuperación de contraseña:
+    recuperacion_token VARCHAR(10) NULL,
+    recuperacion_expira DATETIME NULL,
+
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
     INDEX idx_email (email),
     INDEX idx_cedula (cedula)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

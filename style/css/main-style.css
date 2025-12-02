@@ -366,3 +366,37 @@ main {
 .cart-icon:hover i {
     color: #B51E35;
 }
+
+
+.olvidar-pass {
+    font-size: 0.9em;
+    color: #555;
+    position: relative;
+    text-decoration: none; /* Quita el subrayado normal del link */
+    transition: color 0.3s ease;
+}
+
+.olvidar-pass:visited,
+.olvidar-pass:active,
+.olvidar-pass:focus {
+    text-decoration: none; /* Evita subrayado en cualquier estado */
+}
+
+.olvidar-pass::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: #e50000;
+    transition: width 0.3s ease;
+}
+
+.olvidar-pass:hover {
+    color: #e50000;
+}
+
+.olvidar-pass:hover::after {
+    width: 100%;
+}
