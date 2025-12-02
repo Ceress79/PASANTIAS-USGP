@@ -198,7 +198,14 @@
     color: #555;
     line-height: 1.8;
     font-size: 16px;
-    text-align: justify; /* Texto justificado como en un libro */
+    text-align: justify;
+    margin-bottom: 30px;
+
+    /* --- AGREGA ESTAS LÍNEAS PARA CORREGIR EL TEXTO LARGO --- */
+    width: 100%;              /* Asegura que no sea más ancho que su padre */
+    overflow-wrap: break-word; /* Estándar moderno: rompe palabras si no caben */
+    word-wrap: break-word;     /* Soporte para navegadores viejos */
+    word-break: break-word;    /* Asegura el quiebre en palabras muy largas */
 }
 
 /* Responsive */
