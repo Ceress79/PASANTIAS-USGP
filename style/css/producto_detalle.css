@@ -102,10 +102,36 @@
     color: #a91e2c;
 }
 
+/* 1. Modificar el estilo base del botón agotado */
 .talla-btn.agotado {
-    color: #ddd;
-    text-decoration: line-through;
+    color: #ccc; /* Color de letra gris */
+    border-color: #eee;
+   
     cursor: not-allowed;
+    pointer-events: none;
+    
+    /* CAMBIOS CLAVE: */
+    text-decoration: none; /* Quitamos la línea horizontal fea */
+    position: relative;    /* Necesario para "anclar" la línea diagonal dentro del botón */
+    overflow: hidden;      /* Para que la línea no se salga del cuadradito */
+}
+
+/* 2. Crear la línea diagonal usando ::after */
+.talla-btn.agotado::after {
+    content: '';           /* Crea un elemento vacío */
+    position: absolute;    /* Lo posicionamos libremente */
+    
+    /* Centramos la línea */
+    top: 50%;
+    left: 50%;
+    
+    /* Tamaño y forma de la línea */
+    width: 100%;           /* Largo de la línea (cubre todo el ancho) */
+    height: 1px;           /* Grosor de la línea (puedes poner 2px si la quieres más gruesa) */
+    background-color: #999; /* Color de la línea (un gris un poco más oscuro para que se vea) */
+    
+    /* La magia: Rotamos la línea 45 grados negativos para que vaya de abajo-izq a arriba-der */
+    transform: translate(-50%, -50%) rotate(-45deg); 
 }
 
 /* Botones (Cápsulas grises) */

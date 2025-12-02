@@ -41,7 +41,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         Añadir al carrito
                     </button>
                     
-                    <a href="producto_detalle.php?slug=<?php echo $prod['slug']; ?>" class="btn-comprar">Comprar</a>
+                    
                 </div>
             </div>
         </div>
