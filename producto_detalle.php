@@ -2,7 +2,7 @@
 include('bases/header.php');
 require_once "admin/db/conexion.php";
 
-// 1. Obtener el producto basado en el SLUG de la URL
+// 1. Obtener el producto basado en el SLUG de la URL 
 if (isset($_GET['slug'])) {
     $slug = $_GET['slug'];
     
@@ -20,7 +20,7 @@ if (isset($_GET['slug'])) {
         exit();
     }
 
-    // 2. Obtener las tallas
+    // 2. Obtener las tallas 
     $stmtVar = $pdo->prepare("SELECT * FROM variantes WHERE producto_id = ? ORDER BY FIELD(talla, 'S','M','L','XL')");
     $stmtVar->execute([$producto['id']]);
     $variantes = $stmtVar->fetchAll(PDO::FETCH_ASSOC);
@@ -36,6 +36,7 @@ if (isset($_GET['slug'])) {
 <div class="detalle-container">
     
     <div class="detalle-imagen">
+        <!-- Lógica de Zoom Original Intacta -->
         <div class="img-zoom-container">
             <img src="<?php echo !empty($producto['foto']) ? $producto['foto'] : 'style/img/placeholder.png'; ?>" 
                  alt="<?php echo htmlspecialchars($producto['nombre']); ?>" id="mainImage">
@@ -58,7 +59,14 @@ if (isset($_GET['slug'])) {
             </div>
 
             <div class="acciones-detalle">
-                <button class="btn-anadir" id="btnAnadir" onclick="agregarAlCarrito()">
+                <!-- 
+                     CAMBIO SEGURO: Se añade el atributo data-producto-id.
+                     El resto de clases e IDs se mantienen igual.
+                -->
+                <button class="btn-anadir" 
+                        id="btnAnadir" 
+                        onclick="agregarAlCarrito()"
+                        data-producto-id="<?php echo $producto['id']; ?>">
                     Añadir al carrito
                 </button>
                 <button class="btn-comprar-ahora">Comprar</button>
@@ -66,9 +74,8 @@ if (isset($_GET['slug'])) {
 
         </div>
         
-        <div id="mensaje-confirmacion" style="display:none; color: green; margin-top: 10px; text-align: center;">
-            <i class="fas fa-check-circle"></i> Producto añadido al carrito
-        </div>
+        <!-- Contenedor para mensajes  -->
+        <div id="mensaje-confirmacion" style="display:none; margin-top: 10px; text-align: center;"></div>
     </div>
 
     <div class="detalle-info">
@@ -87,7 +94,7 @@ if (isset($_GET['slug'])) {
 </div>
 
 <script>
-    // --- LÓGICA DE ZOOM ---
+    // --- LÓGICA DE ZOOM  ---
     const container = document.querySelector('.img-zoom-container');
     const img = document.getElementById('mainImage');
 
@@ -104,7 +111,7 @@ if (isset($_GET['slug'])) {
         img.style.transform = "scale(1)";
     });
 
-    // --- LÓGICA TALLAS ---
+    // --- LÓGICA TALLAS  ---
     function seleccionarTalla(btn) {
         if (btn.classList.contains('agotado')) return;
         document.querySelectorAll('.talla-btn').forEach(b => b.classList.remove('seleccionado'));
@@ -112,16 +119,70 @@ if (isset($_GET['slug'])) {
         document.getElementById('talla_seleccionada').value = btn.getAttribute('data-id');
     }
 
+    // --- LÓGICA AGREGAR AL CARRITO  ---
     function agregarAlCarrito() {
+        const btnAnadir = document.getElementById('btnAnadir');
         const tallaId = document.getElementById('talla_seleccionada').value;
+        const productoId = btnAnadir.getAttribute('data-producto-id');
+        const mensajeConfirmacion = document.getElementById('mensaje-confirmacion');
+
+        // 1. Validación 
         if (!tallaId) {
-            alert("Por favor, selecciona una talla primero.");
+            // Estilos inline para asegurar feedback
+            mensajeConfirmacion.style.color = '#721c24'; // Rojo oscuro
+            mensajeConfirmacion.style.backgroundColor = '#f8d7da'; // Fondo rojizo
+            mensajeConfirmacion.style.padding = '10px';
+            mensajeConfirmacion.style.borderRadius = '5px';
+            mensajeConfirmacion.innerHTML = 'Por favor, selecciona una talla primero.';
+            mensajeConfirmacion.style.display = 'block';
+            
+            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
             return;
         }
-        document.getElementById('mensaje-confirmacion').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('mensaje-confirmacion').style.display = 'none';
-        }, 3000);
+
+        // 2. Envío de datos al backend (AJAX)
+        const data = new URLSearchParams();
+        data.append('accion', 'agregar_producto');
+        data.append('producto_id', productoId);
+        data.append('variante_id', tallaId);
+
+        fetch('acciones_carrito.php', {
+            method: 'POST',
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            mensajeConfirmacion.style.padding = '10px';
+            mensajeConfirmacion.style.borderRadius = '5px';
+
+            if (data.exito) {
+                // Éxito
+                mensajeConfirmacion.style.color = '#155724'; // Verde oscuro
+                mensajeConfirmacion.style.backgroundColor = '#d4edda'; // Fondo verdoso
+                mensajeConfirmacion.innerHTML = '¡Producto añadido al carrito!';
+                
+                // Actualizar contador del header si existe
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    cartCount.textContent = data.articulos;
+                }
+            } else {
+                // Error lógico
+                mensajeConfirmacion.style.color = '#721c24';
+                mensajeConfirmacion.style.backgroundColor = '#f8d7da';
+                mensajeConfirmacion.innerHTML = 'Error: ' + data.mensaje;
+            }
+            
+            mensajeConfirmacion.style.display = 'block';
+            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mensajeConfirmacion.style.color = 'red';
+            mensajeConfirmacion.innerHTML = 'Error de conexión.';
+            mensajeConfirmacion.style.display = 'block';
+            setTimeout(() => { mensajeConfirmacion.style.display = 'none'; }, 3000);
+        });
     }
 </script>
 
