@@ -1,13 +1,42 @@
 <?php
-// 1. CONTROL DE SESIÓN
-// Si no hay sesión iniciada, la iniciamos.
+// 1. DETECCIÓN DE RUTAS (SISTEMA DE NIVELES)
+// Lo ponemos al principio porque lo necesitamos para las redirecciones de timeout
+$nivel = (strpos($_SERVER['PHP_SELF'], '/usuario/') !== false) ? '../' : './';
+
+// 2. CONTROL DE SESIÓN
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. DETECCIÓN DE RUTAS
-// Define si debemos usar "../" o "./" dependiendo de la carpeta donde estemos
-$nivel = (strpos($_SERVER['PHP_SELF'], '/usuario/') !== false) ? '../' : './';
+// 3. LÓGICA DE TIMEOUT (Cierre de sesión por inactividad)
+// -------------------------------------------------------
+$tiempo_limite = 1800; // 1800 segundos = 30 Minutos. (Cámbialo a 60 para probar rápido)
+
+// Solo verificamos si el usuario ya está logueado
+if (isset($_SESSION['user_id'])) {
+    
+    // Si existe un registro de la última vez que entró
+    if (isset($_SESSION['ultimo_acceso'])) {
+        $tiempo_transcurrido = time() - $_SESSION['ultimo_acceso'];
+
+        // Si ha pasado más tiempo del permitido
+        if ($tiempo_transcurrido > $tiempo_limite) {
+            session_unset();     // Borra las variables
+            session_destroy();   // Destruye la sesión
+            
+            // Redirige al login. Usamos $nivel para que la ruta siempre sea correcta
+            header("Location: " . $nivel . "usuario/login.php?error=timeout");
+            exit();
+        }
+    }
+    
+    // Si no ha expirado, actualizamos la hora al momento actual (REINICIA EL RELOJ)
+    $_SESSION['ultimo_acceso'] = time();
+}
+// -------------------------------------------------------
+
+
+// Obtener nombre de la página para la clase "active"
 $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
 ?>
 
