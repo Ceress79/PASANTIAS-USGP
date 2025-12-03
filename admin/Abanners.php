@@ -17,6 +17,9 @@ $banner_count = count($banners);
     <meta charset="UTF-8">
     <title>Gestión de Banners - USGP</title>
     <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- ✅ ESTA LÍNEA ES LA QUE TE FALTABA PARA VER LOS ÍCONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
 <div class="admin-container">

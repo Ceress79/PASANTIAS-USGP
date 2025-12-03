@@ -19,47 +19,11 @@ $about_image = $config_data['about_us_image'] ?? 'uploads/site/default_about.png
     <meta charset="UTF-8">
     <title>Configuración General - USGP</title>
     <link rel="stylesheet" href="css/admin.css">
-    <style>
-        .main-content { padding: 20px; }
-        .gestion-container {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-        .text-preview {
-            border: 1px solid #ddd;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            margin-top: 10px;
-            white-space: pre-wrap;
-        }
-        .image-preview {
-            margin-top: 10px;
-            max-width: 400px;
-            border-radius: 5px;
-        }
-        .btn {
-            padding: 10px 16px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        .btn-azul { background: #004a99; color: white; }
-        .btn-rojo { background: #c62828; color: white; }
-    </style>
+    <link rel="stylesheet" href="css/configuracion.css">
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+
 </head>
 <body>
 <div class="admin-container">
@@ -67,49 +31,137 @@ $about_image = $config_data['about_us_image'] ?? 'uploads/site/default_about.png
 
     <main class="main-content">
         <header class="admin-header">
-            <h1>Configuración General del Sitio</h1>
-            <p>Ajustes de la sección "Nosotros".</p>
+            <h1>Configuración General</h1>
+            <p>Gestiona el contenido de la sección "Nosotros" y otros ajustes.</p>
         </header>
 
-        <section class="dashboard">
-            <div class="gestion-container">
-                <h2>Sección "Nosotros"</h2>
-
-                <?php if(isset($_GET['error'])): ?>
-                    <p style="color:red; background:#ffebee; padding:10px; border-radius:4px;"><?php echo htmlspecialchars(urldecode($_GET['error'])); ?></p>
-                <?php endif; ?>
-                <?php if(isset($_GET['exito'])): ?>
-                    <p style="color:green; background:#e8f5e9; padding:10px; border-radius:4px;"><?php echo htmlspecialchars($_GET['exito']); ?></p>
-                <?php endif; ?>
-
-                <!-- Vista previa -->
-                <h3>Vista previa del texto actual:</h3>
-                <div class="text-preview"><?php echo nl2br(htmlspecialchars($about_text ?: 'Sin texto configurado.')); ?></div>
-
-                <form action="Aacciones_config.php" method="POST" enctype="multipart/form-data" class="form-config">
-                    <input type="hidden" name="accion" value="guardar_nosotros">
-
-                    <label for="about_text">Editar texto:</label>
-                    <textarea name="about_text" id="about_text"><?php echo htmlspecialchars($about_text); ?></textarea>
-
-                    <label for="about_image">Imagen actual:</label><br>
-                    <img src="../<?php echo htmlspecialchars($about_image); ?>?v=<?php echo time(); ?>" alt="Vista previa" class="image-preview">
-
-                    <p>Cambiar imagen (opcional, máx. 3MB):</p>
-                    <input type="file" name="about_image" accept="image/jpeg,image/png,image/webp">
-
-                    <div style="margin-top:15px;">
-                        <button type="submit" class="btn btn-azul">💾 Guardar Cambios</button>
-                    </div>
-                </form>
-
-                <form action="Aacciones_config.php" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar el texto de “Nosotros”?');">
-                    <input type="hidden" name="accion" value="eliminar_nosotros">
-                    <button type="submit" class="btn btn-rojo">🗑️ Eliminar Texto</button>
-                </form>
+        <!-- Mensajes de Feedback -->
+        <?php if(isset($_GET['error'])): ?>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> 
+                <?php echo htmlspecialchars(urldecode($_GET['error'])); ?>
             </div>
-        </section>
+        <?php endif; ?>
+        <?php if(isset($_GET['exito'])): ?>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <?php echo htmlspecialchars($_GET['exito']); ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="Aacciones_config.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="accion" value="guardar_nosotros">
+            
+            <div class="config-grid">
+                
+                <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-edit"></i> Editar Contenido</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="about_text" class="form-label">Texto descriptivo "Nosotros"</label>
+                        <textarea name="about_text" id="about_text" class="form-control" placeholder="Escribe aquí la historia o descripción de la empresa..."><?php echo htmlspecialchars($about_text); ?></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Imagen Destacada</label>
+                        <div class="file-upload-wrapper">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <div class="upload-text">Arrastra una imagen aquí o haz clic para seleccionar</div>
+                            <div style="font-size: 0.8em; color: #999; margin-top: 5px;">Formatos: JPG, PNG, WebP (Máx 3MB)</div>
+                            <input type="file" name="about_image" accept="image/jpeg,image/png,image/webp" onchange="previewImage(this)">
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        
+                        <!-- El botón de eliminar es un formulario aparte, pero lo estilizamos para que encaje visualmente -->
+                        <button type="submit" form="form-eliminar" class="btn btn-danger" onclick="return confirm('¿Seguro que deseas eliminar el texto?');">
+                            <i class="fas fa-trash-alt"></i> Borrar Texto
+                        </button>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: VISTA PREVIA -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3><i class="fas fa-eye"></i> Vista Previa en el Sitio</h3>
+                            <span class="header-subtitle">
+                                <i class="fas fa-search-plus"></i> Dale click a la imagen para verla completa
+                            </span>
+                        </div>
+                        <span style="font-size: 0.8em; color: #888; align-self: center;">Así lo verán tus clientes</span>
+                    </div>
+
+                    <div class="preview-container">
+                        <!-- Añadimos evento onclick para abrir modal -->
+                        <div class="preview-image-box" onclick="openFullImage()">
+                            <img id="imgPreview" src="../<?php echo htmlspecialchars($about_image); ?>?v=<?php echo time(); ?>" alt="Vista previa">
+                            <div class="click-hint"><i class="fas fa-expand"></i> Ampliar</div>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-title">Sobre Nosotros</div>
+                            <div class="preview-text"><?php echo nl2br(htmlspecialchars($about_text ?: 'Aquí aparecerá el texto que escribas en el formulario...')); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        
+        <!-- Formulario oculto auxiliar para borrar -->
+        <form id="form-eliminar" action="Aacciones_config.php" method="POST">
+            <input type="hidden" name="accion" value="eliminar_nosotros">
+        </form>
+
     </main>
 </div>
+
+<!-- Modal para ver imagen completa -->
+<div id="fullImageModal" class="image-modal" onclick="closeFullImage()">
+    <span class="close-img-modal">&times;</span>
+    <img class="image-modal-content" id="imgModalTarget">
+</div>
+
+<script>
+    // Script para previsualizar la imagen antes de subirla
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imgPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Scripts para el Modal de Imagen
+    function openFullImage() {
+        var modal = document.getElementById("fullImageModal");
+        var imgSource = document.getElementById("imgPreview").src;
+        var modalImg = document.getElementById("imgModalTarget");
+        
+        modal.style.display = "block";
+        modalImg.src = imgSource;
+    }
+
+    function closeFullImage() {
+        document.getElementById("fullImageModal").style.display = "none";
+    }
+
+    // Cerrar con tecla Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeFullImage();
+        }
+    });
+</script>
+
 </body>
 </html>
