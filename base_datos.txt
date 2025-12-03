@@ -90,6 +90,29 @@ CREATE TABLE variantes (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ======================================================
+--  Tabla: carrito_compras 
+-- ======================================================
+CREATE TABLE carrito_compras (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    producto_id CHAR(36) CHARACTER SET ascii NOT NULL,
+    
+    -- Variante puede ser un UUID o el string '0' (para pendientes)
+    variante_id VARCHAR(50) NOT NULL DEFAULT '0', 
+    
+    cantidad INT NOT NULL DEFAULT 1,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    -- Evitar duplicados: Un usuario no puede tener dos filas identicas
+    UNIQUE KEY unique_item (user_id, producto_id, variante_id),
+    
+    -- Relación con usuario (si se borra usuario, se borra su carrito)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    -- NOTA: No hacemos FK a variantes porque variante_id puede ser '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ======================================================
 -- 🖼️ Tabla: fotos (Imágenes de usuarios, productos o banners)
 -- ======================================================
 CREATE TABLE fotos (
@@ -224,6 +247,7 @@ INSERT INTO users (
   'Jomico', 
   'Admin', 
   'jburgos5685@utm.edu.ec',  
+  'tponce5724@utm.edu.ec',  
   'CAMBIAR_LUEGO',          
   'ADMIN', 
   'CREADA'

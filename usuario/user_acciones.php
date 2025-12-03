@@ -1,7 +1,10 @@
 <?php
-session_start();
-require_once "../admin/db/conexion.php";
+// usuario/user_acciones.php
 
+// Incluir configuración de sesión
+require_once __DIR__ . '/../bases/config_sesion.php'; 
+
+require_once "../admin/db/conexion.php";
 
 // Si no existe la conexión, marcar error
 if (!isset($pdo)) {
@@ -17,7 +20,7 @@ $accion = $_POST['accion'];
 
 /*
 |--------------------------------------------------------------------------
-| 1. REGISTRO DE USUARIO
+| 1. REGISTRO DE USUARIO 
 |--------------------------------------------------------------------------
 */
 if ($accion === "register") {
@@ -45,9 +48,10 @@ if ($accion === "register") {
 
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
+    // Nota: Agregué 'estado_cuenta' para asegurar que se cree activa
     $stmt = $pdo->prepare("
-        INSERT INTO users (uuid, nombres, apellidos, email, password_hash)
-        VALUES (UUID(), ?, ?, ?, ?)
+        INSERT INTO users (uuid, nombres, apellidos, email, password_hash, estado_cuenta)
+        VALUES (UUID(), ?, ?, ?, ?, 'CREADA')
     ");
 
     $ok = $stmt->execute([$nombres, $apellidos, $email, $password_hash]);
@@ -66,10 +70,9 @@ if ($accion === "register") {
 
 /*
 |--------------------------------------------------------------------------
-| 2. LOGIN DE USUARIO
+| 2. LOGIN DE USUARIO 
 |--------------------------------------------------------------------------
 */
-
 
 if ($accion === "login") {
 
@@ -82,6 +85,11 @@ if ($accion === "login") {
 
     if ($usuario && password_verify($password, $usuario['password_hash'])) {
         $_SESSION['user_id'] = $usuario['id'];
+        
+        // Esto fusiona lo que el invitado añadió con lo que el usuario tenía guardado
+        include 'recuperar_carrito.php';
+
+        // Redirigir al inicio (o al carrito si viniera de ahí)
         header("Location: ../index.php");
         exit();
     } else {
@@ -93,7 +101,7 @@ if ($accion === "login") {
 
 /*
 |--------------------------------------------------------------------------
-| 3. SI LLEGA AQUÍ, NO EXISTE LA ACCIÓN
+| 3. REDIRECCIÓN POR DEFECTO
 |--------------------------------------------------------------------------
 */
 header("Location: ../index.php");
