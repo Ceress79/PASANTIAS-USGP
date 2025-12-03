@@ -85,7 +85,7 @@ $contactos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php if ($contacto_editar): ?><input type="hidden" name="id" value="<?php echo $contacto_editar['id']; ?>"><?php endif; ?>
 
                     <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:20px;">
-                        <h3 style="margin:0; color:#007bff;"><?php echo $titulo_form; ?></h3>
+                        <h3 style="margin:0; color:#B51E35"><?php echo $titulo_form; ?></h3>
                         <button type="button" onclick="cancelarForm()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-weight:bold;">Cancelar</button>
                     </div>
 

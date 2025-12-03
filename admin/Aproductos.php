@@ -132,7 +132,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="hidden" name="categoria_id" value="<?php echo $cat_actual; ?>">
 
                     <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:20px;">
-                        <h3 style="margin:0; color:#007bff;"><?php echo $titulo_form; ?></h3>
+                        <h3 style="margin:0; color:#B51E35;;"><?php echo $titulo_form; ?></h3>
                         <button type="button" onclick="cancelarForm()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-weight:bold;">Cancelar</button>
                     </div>
 
@@ -166,7 +166,7 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div id="containerStocks">
                         
                         <div id="stock_unico" class="stock-group <?php echo ($cat_actual == 1 && $valores['tipo_stock'] != 'unico') ? 'hidden' : ''; ?>">
-                            <label style="color:#007bff; font-weight:bold;">Stock Total (Unidades):</label>
+                            <label style="color:#B51E35; font-weight:bold;">Stock Total (Unidades):</label>
                             <input type="number" name="stock_unico_cant" value="<?php echo $valores['stock_unico']; ?>" min="0" style="width:120px;">
                         </div>
 

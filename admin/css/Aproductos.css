@@ -25,13 +25,14 @@
 }
 
 .nav-btn.active {
-    background: #00bcd4;
+    background: #B51E35;
     color: white;
-    border-color: #00bcd4;
+    border-color: #B51E35;
     box-shadow: 0 4px 6px rgba(0, 188, 212, 0.2);
 }
 
 .header-actions {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,7 +40,7 @@
 }
 
 .btn-add-new {
-    background: #007bff;
+    background: #B51E35;
     color: white;
     padding: 12px 25px;
     border-radius: 6px;
@@ -51,7 +52,7 @@
 }
 
 .btn-add-new:hover {
-    background: #0056b3;
+    background: #B51E35;
     transform: translateY(-1px);
 }
 
@@ -88,7 +89,7 @@
 }
 
 .form-box input:focus {
-    border-color: #00bcd4;
+    border-color: #B51E35;
     outline: none;
 }
 
