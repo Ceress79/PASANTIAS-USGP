@@ -244,9 +244,9 @@ INSERT INTO users (
   estado_cuenta
 ) VALUES (
   UUID(), 
-  'Jomico', 
+  'Ceress', 
   'Admin', 
-  'jburgos5685@utm.edu.ec',    
+  'thepinwin79@gmail.com',    
   'CAMBIAR_LUEGO',          
   'ADMIN', 
   'CREADA'
