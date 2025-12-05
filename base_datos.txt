@@ -246,8 +246,7 @@ INSERT INTO users (
   UUID(), 
   'Jomico', 
   'Admin', 
-  'jburgos5685@utm.edu.ec',  
-  'tponce5724@utm.edu.ec',  
+  'jburgos5685@utm.edu.ec',    
   'CAMBIAR_LUEGO',          
   'ADMIN', 
   'CREADA'

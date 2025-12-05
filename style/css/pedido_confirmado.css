@@ -1,0 +1,86 @@
+body {
+    background-color: #e5e5e5;
+}
+
+.confirmacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: 60vh; /* Asegura que ocupe buen espacio vertical */
+}
+
+.card-exito {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.icono-exito {
+    font-size: 80px;
+    color: #28a745; /* Verde éxito */
+    margin-bottom: 20px;
+    animation: popIn 0.5s ease-out;
+}
+
+h1 {
+    color: #333;
+    font-family: sans-serif;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.subtitulo {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.detalles-orden {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: left;
+    border: 1px dashed #ccc;
+}
+
+.detalles-orden p {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #444;
+    display: flex;
+    justify-content: space-between;
+}
+
+.uuid {
+    font-family: monospace;
+    font-weight: bold;
+    color: #a91e2c;
+}
+
+.btn-inicio {
+    display: inline-block;
+    background-color: #a91e2c;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-inicio:hover {
+    background-color: #8a1824;
+}
+
+/* Animación simple de entrada */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}

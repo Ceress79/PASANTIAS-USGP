@@ -97,10 +97,10 @@
             </a></li>
             <?php endif; ?>
 
-            <!-- COMPRAS -->
+            <!-- COMPRAS (MODIFICADO: Apunta a Acompras.php) -->
             <?php if (in_array('compras', $permisos_usuario)): ?>
-            <li><a href="<?php echo $ruta_base; ?>compras.php" class="<?php echo $pagina_actual == 'compras.php' ? 'active' : ''; ?>">
-                <i class="fas fa-shopping-cart"></i> Compras
+            <li><a href="<?php echo $ruta_base; ?>Acompras.php" class="<?php echo ($pagina_actual == 'Acompras.php' || $pagina_actual == 'Adetalle_compra.php') ? 'active' : ''; ?>">
+                <i class="fas fa-shopping-cart"></i> Compras / Pedidos
             </a></li>
             <?php endif; ?>
 

@@ -1,0 +1,115 @@
+/* Contenedor Principal (Fondo gris de toda la pantalla) */
+body {
+    background-color: #e5e5e5; /* Gris de fondo general */
+}
+
+.checkout-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    margin-top: 150px
+}
+
+/* Caja Blanca del Formulario */
+.checkout-box {
+    background-color: #f2f2f2; /* Gris claro del cuadro */
+    padding: 30px 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-family: sans-serif;
+    color: #333;
+    font-size: 22px;
+}
+
+/* Estilos de Inputs */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #555;
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="tel"], 
+select, 
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    box-sizing: border-box; /* Para que el padding no rompa el ancho */
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #a91e2c; /* Rojo institucional al seleccionar */
+}
+
+/* Filas de dos columnas */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Radio Buttons */
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+}
+
+.radio-group label {
+    font-weight: normal;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Botón Continuar */
+.form-footer {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.btn-continuar {
+    background-color: #a91e2c; /* Rojo Institucional */
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-continuar:hover {
+    background-color: #8a1824; /* Rojo más oscuro */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr; /* Una columna en móvil */
+        gap: 0;
+    }
+    .checkout-box {
+        padding: 20px;
+    }
+}
