@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require_once "../admin/db/conexion.php";
 
 // 1. Verificar seguridad
@@ -10,42 +9,18 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+
+// 2. Gestionar Mensajes de Sesión (vienen de acciones_perfil.php)
 $mensaje = '';
-$tipo_mensaje = ''; // Para cambiar el color de la alerta (verde/rojo)
+$tipo_mensaje = '';
 
-// 2. Procesar el formulario cuando se envía (POST)
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Limpiamos los datos de entrada
-    $nuevos_nombres = trim($_POST['nombres']);
-    $nuevos_apellidos = trim($_POST['apellidos']);
-    $nueva_clave = trim($_POST['password']);
-
-    if (empty($nuevos_nombres) || empty($nuevos_apellidos)) {
-        $mensaje = "El nombre y apellido son obligatorios.";
-        $tipo_mensaje = "error";
-    } else {
-        try {
-            if (!empty($nueva_clave)) {
-                // Si el usuario escribió algo en la contraseña, la actualizamos (encriptada)
-                $clave_hash = password_hash($nueva_clave, PASSWORD_DEFAULT);
-                $sql = "UPDATE users SET nombres = ?, apellidos = ?, password = ? WHERE id = ?";
-                $update = $pdo->prepare($sql);
-                $update->execute([$nuevos_nombres, $nuevos_apellidos, $clave_hash, $user_id]);
-            } else {
-                // Si el campo contraseña está vacío, NO la tocamos, solo actualizamos nombres
-                $sql = "UPDATE users SET nombres = ?, apellidos = ? WHERE id = ?";
-                $update = $pdo->prepare($sql);
-                $update->execute([$nuevos_nombres, $nuevos_apellidos, $user_id]);
-            }
-
-            $mensaje = "¡Datos actualizados correctamente!";
-            $tipo_mensaje = "success";
-
-        } catch (PDOException $e) {
-            $mensaje = "Error en la base de datos: " . $e->getMessage();
-            $tipo_mensaje = "error";
-        }
-    }
+if (isset($_SESSION['perfil_mensaje'])) {
+    $mensaje = $_SESSION['perfil_mensaje'];
+    $tipo_mensaje = $_SESSION['perfil_tipo']; // 'success' o 'error'
+    
+    // Limpiamos las variables para que no salgan al recargar
+    unset($_SESSION['perfil_mensaje']);
+    unset($_SESSION['perfil_tipo']);
 }
 
 // 3. Obtener los datos actuales del usuario para mostrarlos en los inputs
@@ -58,11 +33,26 @@ if (!$usuario) {
     exit();
 }
 
-// 4. Incluir Header (Tu header inteligente se encarga del inicio de HTML)
+// 4. Incluir Header
 include('../bases/header.php'); 
 ?>
 
 <link rel="stylesheet" href="../style/css/perfil.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+<style>
+    /* Estilos rápidos para el ojito en perfil (por si no están en perfil.css) */
+    .password-wrapper {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 38px; /* Ajusta esto según la altura de tu label */
+        cursor: pointer;
+        color: #777;
+    }
+</style>
 
 <div class="perfil-wrapper">
     <div class="perfil-container">
@@ -78,11 +68,11 @@ include('../bases/header.php');
             </div>
         <?php endif; ?>
 
-        <form action="" method="POST" class="perfil-form">
+        <form action="acciones_perfil.php" method="POST" class="perfil-form">
             
             <div class="form-group">
                 <label>Correo Electrónico</label>
-                <input type="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" disabled class="input-disabled">
+                <input type="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" disabled class="input-disabled" title="El correo no se puede cambiar">
             </div>
 
             <div class="form-row">
@@ -99,7 +89,12 @@ include('../bases/header.php');
 
             <div class="form-group password-section">
                 <label for="password">Cambiar Contraseña</label>
-                <input type="password" name="password" id="password" placeholder="Deja vacío para mantener la actual">
+                
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="password" placeholder="Deja vacío para mantener la actual">
+                    <i class="fas fa-eye toggle-password" onclick="togglePass('password', this)"></i>
+                </div>
+                
                 <small>Solo llena este campo si deseas cambiar tu clave actual.</small>
             </div>
 
@@ -118,6 +113,21 @@ include('../bases/header.php');
 
     </div>
 </div>
+
+<script>
+    function togglePass(inputId, iconElement) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            iconElement.classList.remove('fa-eye');
+            iconElement.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            iconElement.classList.remove('fa-eye-slash');
+            iconElement.classList.add('fa-eye');
+        }
+    }
+</script>
 
 <?php include('../bases/footer.php'); ?>
 </body>
