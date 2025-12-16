@@ -45,12 +45,13 @@ h2 {
     color: #333;
 }
 
-/* Input con ícono */
+/* Input con ícono (Estilo General) */
 .input-group {
     position: relative;
     margin-bottom: 18px;
 }
 
+/* Esto posiciona los íconos normales (user, envelope, lock) a la izquierda */
 .input-group i {
     position: absolute;
     top: 12px;
@@ -60,16 +61,31 @@ h2 {
 
 .input-group input {
     width: 100%;
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 40px; /* Espacio a la izquierda para el ícono */
     border: 1px solid #bbb;
     border-radius: 6px;
     font-size: 15px;
     outline: none;
     transition: 0.2s;
+    box-sizing: border-box; /* Importante para que no se desborde */
 }
 
 .input-group input:focus {
     border-color: #000;
+}
+
+/* --- NUEVO: Estilos específicos para el input de contraseña --- */
+.input-group .input-pass {
+    padding-right: 40px; /* Espacio extra a la derecha para el ojo */
+}
+
+/* --- NUEVO: Estilos específicos para el ícono del ojo --- */
+/* Sobreescribimos la regla general de .input-group i */
+.input-group .toggle-password {
+    left: auto;       /* Anulamos la izquierda */
+    right: 15px;      /* Lo mandamos a la derecha */
+    cursor: pointer;  /* Manita al pasar el mouse */
+    z-index: 10;
 }
 
 /* Botón */
@@ -126,4 +142,3 @@ h2 {
         height: 250px;
     }
 }
-

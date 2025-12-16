@@ -47,16 +47,17 @@ if (isset($_SESSION['login_error_user'])) {
 
             <div class="input-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="Contraseña" required>
+                
+                <input type="password" name="password" id="password" class="input-pass" placeholder="Contraseña" required>
+                
+                <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
             </div>
 
             <div style="text-align: right; margin-bottom: 10px;">
-<a href="cambiar_contrasenia.php" class="olvidar-pass">
-    ¿Olvidaste tu contraseña?
-</a>
+                <a href="cambiar_contrasenia.php" class="olvidar-pass">
+                    ¿Olvidaste tu contraseña?
+                </a>
             </div>
-
-
 
             <button type="submit" class="btn-login">Ingresar</button>
 
@@ -68,8 +69,6 @@ if (isset($_SESSION['login_error_user'])) {
     </div>
 </div>
 
-</body>
-
 <?php if (isset($_SESSION['register_success'])): ?>
     <div class="toast success-toast">
         <?php 
@@ -79,5 +78,22 @@ if (isset($_SESSION['login_error_user'])) {
     </div>
 <?php endif; ?>
 
-</html>
+<script>
+    function togglePass() {
+        const input = document.getElementById("password");
+        const icon = document.querySelector(".toggle-password");
 
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+
+</body>
+</html>

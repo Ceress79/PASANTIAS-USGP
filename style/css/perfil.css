@@ -1,19 +1,29 @@
+/* =========================================
+   style/css/perfil.css - VERSIÓN CORREGIDA
+   ========================================= */
+
 /* --- Estilos Generales del Contenedor --- */
 .perfil-wrapper {
-    background-color: #f8f9fa; /* Fondo gris suave para toda la sección */
-    min-height: 80vh;
+    background-color: #f8f9fa;
+    min-height: 90vh; /* Asegura altura mínima */
     display: flex;
     justify-content: center;
-    padding: 40px 20px;
+    align-items: flex-start; /* Importante: Alinea arriba, no al centro, para evitar conflictos de altura */
+    
+    /* padding-top: 140px -> Baja el formulario para que el Header rojo no tape el texto.
+       padding-bottom: 100px -> Empuja el Footer gris hacia abajo para que no tape los botones.
+    */
+    padding: 140px 20px 100px 20px;
 }
 
 .perfil-container {
     background-color: #ffffff;
     width: 100%;
-    max-width: 700px; /* Hacemos el formulario un poco más ancho */
+    max-width: 700px;
     padding: 40px;
-    border-radius: 15px; /* Bordes más redondeados */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Sombra suave moderna */
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    margin-bottom: 20px; /* Margen extra de seguridad */
 }
 
 /* --- Cabecera del Perfil --- */
@@ -27,13 +37,15 @@
 .perfil-header h2 {
     color: #333;
     margin: 0;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .perfil-header p {
-    color: #666;
-    margin-top: 5px;
-    font-size: 14px;
+    color: #555;
+    /* AJUSTE SOLICITADO: Texto más grande y más separado del título */
+    margin-top: 12px;
+    font-size: 18px; 
+    font-weight: 500;
 }
 
 /* --- Estilos del Formulario --- */
@@ -54,7 +66,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
-    box-sizing: border-box; /* Evita que el padding rompa el ancho */
+    box-sizing: border-box; 
     transition: all 0.3s ease;
 }
 
@@ -64,14 +76,12 @@
     box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
 }
 
-/* Input gris para el email */
 .input-disabled {
     background-color: #e9ecef;
     color: #6c757d;
     cursor: not-allowed;
 }
 
-/* Texto pequeño de ayuda */
 .password-section small {
     display: block;
     margin-top: 5px;
@@ -79,12 +89,32 @@
     font-size: 13px;
 }
 
+/* --- Lógica del Ojito --- */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    padding-right: 45px; /* Espacio para que el texto no choque con el ojo */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+    z-index: 10;
+}
+
 /* --- Botón Guardar --- */
 .btn-guardar {
     display: block;
     width: 100%;
     padding: 14px;
-    background-color: #28a745; /* Verde */
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 8px;
@@ -98,11 +128,11 @@
     background-color: #218838;
 }
 
-/* --- Enlaces inferiores (Logout y Volver) --- */
+/* --- Enlaces inferiores --- */
 .perfil-footer-links {
     margin-top: 30px;
     display: flex;
-    justify-content: space-between; /* Uno a la izquierda, otro a la derecha */
+    justify-content: space-between;
     align-items: center;
     padding-top: 20px;
     border-top: 1px solid #eee;
@@ -111,39 +141,31 @@
 .link-volver, .link-logout {
     text-decoration: none;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: opacity 0.2s;
 }
 
-.link-volver {
-    color: #007bff;
-}
+.link-volver { color: #007bff; }
+.link-logout { color: #dc3545; }
+.link-volver:hover, .link-logout:hover { text-decoration: underline; opacity: 0.8; }
 
-.link-logout {
-    color: #dc3545;
-}
-
-.link-volver:hover, .link-logout:hover {
-    text-decoration: underline;
-}
-
-/* --- Alertas (Mensajes de éxito/error) --- */
+/* --- Alertas (Mensajes Éxito/Error) --- */
 .alerta {
     padding: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border-radius: 8px;
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 16px;
 }
-
 .alerta.success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
-
 .alerta.error {
     background-color: #f8d7da;
     color: #721c24;
@@ -152,31 +174,41 @@
 
 /* --- RESPONSIVIDAD --- */
 
-/* En pantallas grandes, ponemos nombre y apellido en la misma fila */
+/* Escritorio: Inputs en fila */
 .form-row {
     display: flex;
     gap: 20px;
 }
-
 .form-row .form-group {
-    flex: 1; /* Ocupan 50% cada uno */
+    flex: 1;
 }
 
-/* Media Query: Para celulares (menos de 600px de ancho) */
+/* Móvil: Ajustes críticos */
 @media (max-width: 600px) {
-    .perfil-container {
-        padding: 20px; /* Menos relleno en celular */
-        width: 100%;
+    .perfil-wrapper {
+        padding-top: 120px; /* Un poco menos que en escritorio */
+        
+        /* MUY IMPORTANTE: Espacio inferior gigante para móvil */
+        padding-bottom: 180px !important; 
     }
 
-    /* Nombre y Apellido pasan a estar uno debajo del otro */
+    .perfil-container {
+        padding: 25px 20px;
+    }
+
     .form-row {
         flex-direction: column;
         gap: 0;
     }
 
     .perfil-footer-links {
-        flex-direction: column; /* Botones uno debajo del otro */
-        gap: 15px;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .link-volver, .link-logout {
+        padding: 10px; /* Área de toque cómoda */
+        font-size: 16px;
     }
 }

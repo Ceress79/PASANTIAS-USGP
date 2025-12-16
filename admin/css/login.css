@@ -36,7 +36,7 @@ body {
 
 /* --- Logo --- */
 .logo-container {
-    margin-bottom: 15px; /* antes 25px */
+    margin-bottom: 15px;
 }
 
 .logo {
@@ -57,6 +57,7 @@ body {
     margin-bottom: 18px;
 }
 
+/* Estilo general para los iconos (por defecto a la izquierda) */
 .input-group i {
     position: absolute;
     top: 50%;
@@ -69,7 +70,7 @@ body {
 /* Hacemos que el ancho sea exactamente igual al botón */
 .input-group input {
     width: 100%;
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 40px; /* Padding izquierdo para el icono del candado/sobre */
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
@@ -81,6 +82,21 @@ body {
 .input-group input:focus {
     border-color: #B51E35;
     box-shadow: 0 0 8px rgba(181, 30, 53, 0.3);
+}
+
+/* --- NUEVO: Estilos específicos para el input de contraseña --- */
+.input-group .input-pass {
+    padding-right: 40px; /* Espacio extra a la derecha para que el texto no toque el ojo */
+}
+
+/* --- NUEVO: Estilos específicos para el ícono del ojo --- */
+/* Usamos especificidad para sobreescribir el 'left: 14px' de arriba */
+.input-group .toggle-password {
+    left: auto;       /* Anulamos la izquierda */
+    right: 15px;      /* Lo mandamos a la derecha */
+    cursor: pointer;  /* Icono de mano al pasar el mouse */
+    color: #777;      /* Color gris (opcional, puedes usar el rojo #B51E35 si prefieres) */
+    z-index: 10;      /* Aseguramos que esté por encima */
 }
 
 /* --- Botón --- */
@@ -115,7 +131,7 @@ body {
     }
 }
 
-
+/* --- Toast Notificaciones --- */
 .toast {
     position: fixed;
     top: 20px;
@@ -138,12 +154,12 @@ body {
     100% { opacity: 0; transform: translateY(-20px); }
 }
 
-
+/* --- Enlace Olvidé contraseña --- */
 .olvidar-pass {
     font-size: 0.9em;
     color: #555;
     position: relative;
-    text-decoration: none !important; /* Mata el subrayado */
+    text-decoration: none !important;
     transition: color 0.3s ease;
 }
 
@@ -151,7 +167,7 @@ body {
 .olvidar-pass:active,
 .olvidar-pass:focus,
 .olvidar-pass:hover {
-    text-decoration: none !important; /* Por si acaso */
+    text-decoration: none !important;
 }
 
 .olvidar-pass::after {

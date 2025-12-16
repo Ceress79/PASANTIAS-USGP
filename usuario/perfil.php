@@ -23,7 +23,7 @@ if (isset($_SESSION['perfil_mensaje'])) {
     unset($_SESSION['perfil_tipo']);
 }
 
-// 3. Obtener los datos actuales del usuario para mostrarlos en los inputs
+// 3. Obtener los datos actuales del usuario
 $stmt = $pdo->prepare("SELECT nombres, apellidos, email FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -39,20 +39,6 @@ include('../bases/header.php');
 
 <link rel="stylesheet" href="../style/css/perfil.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
-<style>
-    /* Estilos rápidos para el ojito en perfil (por si no están en perfil.css) */
-    .password-wrapper {
-        position: relative;
-    }
-    .toggle-password {
-        position: absolute;
-        right: 15px;
-        top: 38px; /* Ajusta esto según la altura de tu label */
-        cursor: pointer;
-        color: #777;
-    }
-</style>
 
 <div class="perfil-wrapper">
     <div class="perfil-container">

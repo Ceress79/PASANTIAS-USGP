@@ -78,9 +78,11 @@ if (isset($_SESSION['login_success'])) {
                     <i class="fas fa-user-shield"></i>
                     <input type="text" name="email" placeholder="Usuario o Email" required>
                 </div>
+
                 <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <i class="fas fa-lock"></i> <input type="password" name="password" id="password" class="input-pass" placeholder="Contraseña" required>
+                    
+                    <i class="fas fa-eye toggle-password" onclick="togglePass()"></i>
                 </div>
                 
                 <div style="text-align: right;">
@@ -91,6 +93,23 @@ if (isset($_SESSION['login_success'])) {
             </form>
         </div>
     </div>
+
+<script>
+    function togglePass() {
+        const input = document.getElementById("password");
+        const icon = document.querySelector(".toggle-password");
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
 
 </body>
 </html>

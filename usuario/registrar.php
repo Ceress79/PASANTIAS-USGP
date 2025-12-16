@@ -19,27 +19,23 @@ if (isset($_SESSION['register_error'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Usuario</title>
 
-    <!-- Tu CSS del registro -->
     <link rel="stylesheet" href="../style/css/register.css">
 
-    <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
 
 <div class="container">
 
-    <!-- Imagen izquierda -->
     <div class="left-section">
         <img src="../style/img/login/usgp_registro.jpg" alt="Imagen Registro">
     </div>
 
-    <!-- Formulario derecha -->
     <div class="right-section">
 
         <div class="form-box">
 
-            <h2 class= "red">Crear Cuenta</h2>
+            <h2 class="red">Crear Cuenta</h2>
 
             <?php if($error_para_mostrar): ?>
                 <p class="error-msg"><?php echo htmlspecialchars($error_para_mostrar); ?></p>
@@ -66,12 +62,14 @@ if (isset($_SESSION['register_error'])) {
 
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <input type="password" name="password" id="pass1" class="input-pass" placeholder="Contraseña" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePass('pass1', this)"></i>
                 </div>
 
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="confirmar" placeholder="Confirmar contraseña" required>
+                    <input type="password" name="confirmar" id="pass2" class="input-pass" placeholder="Confirmar contraseña" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePass('pass2', this)"></i>
                 </div>
 
                 <button class="btn-register" type="submit">Registrarme</button>
@@ -85,6 +83,22 @@ if (isset($_SESSION['register_error'])) {
         </div>
     </div>
 </div>
+
+<script>
+    function togglePass(inputId, iconElement) {
+        const input = document.getElementById(inputId);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            iconElement.classList.remove('fa-eye');
+            iconElement.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            iconElement.classList.remove('fa-eye-slash');
+            iconElement.classList.add('fa-eye');
+        }
+    }
+</script>
 
 </body>
 </html>
