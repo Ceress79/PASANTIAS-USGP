@@ -1,43 +1,39 @@
 <?php
 // 1. DETECCIÓN DE RUTAS (SISTEMA DE NIVELES)
-// Lo ponemos al principio porque lo necesitamos para las redirecciones de timeout
 $nivel = (strpos($_SERVER['PHP_SELF'], '/usuario/') !== false) ? '../' : './';
 
-// 2. CONTROL DE SESIÓN
+// 2. CONTROL DE SESIÓN (Persistente si existe config)
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    if (file_exists(__DIR__ . '/config_sesion.php')) {
+        require_once __DIR__ . '/config_sesion.php';
+    } else {
+        session_start();
+    }
 }
 
-// 3. LÓGICA DE TIMEOUT (Cierre de sesión por inactividad)
-// -------------------------------------------------------
-$tiempo_limite = 1800; // 1800 segundos = 30 Minutos. (Cámbialo a 60 para probar rápido)
-
-// Solo verificamos si el usuario ya está logueado
+// 3. LÓGICA DE TIMEOUT (Tu código original intacto)
+$tiempo_limite = 1800; 
 if (isset($_SESSION['user_id'])) {
-    
-    // Si existe un registro de la última vez que entró
     if (isset($_SESSION['ultimo_acceso'])) {
         $tiempo_transcurrido = time() - $_SESSION['ultimo_acceso'];
-
-        // Si ha pasado más tiempo del permitido
         if ($tiempo_transcurrido > $tiempo_limite) {
-            session_unset();     // Borra las variables
-            session_destroy();   // Destruye la sesión
-            
-            // Redirige al login. Usamos $nivel para que la ruta siempre sea correcta
+            session_unset(); session_destroy();
             header("Location: " . $nivel . "usuario/login.php?error=timeout");
             exit();
         }
     }
-    
-    // Si no ha expirado, actualizamos la hora al momento actual (REINICIA EL RELOJ)
     $_SESSION['ultimo_acceso'] = time();
 }
-// -------------------------------------------------------
 
-
-// Obtener nombre de la página para la clase "active"
 $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
+
+//  CALCULAR TOTAL REAL DEL CARRITO
+$total_articulos_header = 0;
+if (isset($_SESSION['carrito']) && !empty($_SESSION['carrito'])) {
+    foreach ($_SESSION['carrito'] as $item) {
+        $total_articulos_header += $item['cantidad'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,8 +43,9 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USGP Tienda - Ropa y Accesorios</title>
     
-    <link rel="stylesheet" href="<?php echo $nivel; ?>style/css/main-style.css">
-    <link rel="stylesheet" href="<?php echo $nivel; ?>style/css/footer.css">
+    <!-- Agregamos ?v=time() para evitar caché de estilos -->
+    <link rel="stylesheet" href="<?php echo $nivel; ?>style/css/main-style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $nivel; ?>style/css/footer.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <body>
@@ -139,9 +136,10 @@ $pagina_actual = basename($_SERVER['SCRIPT_NAME']);
                         </nav>
                     </label>
 
+                    <!--  EL CONTADOR CARRITO -->
                     <a href="<?php echo $nivel; ?>carrito.php" class="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count"><?php echo $total_articulos_header; ?></span>
                     </a>
 
                 </div>
