@@ -252,6 +252,24 @@ INSERT INTO users (
   'CREADA'
 );
 
+INSERT INTO users (
+  uuid, 
+  nombres, 
+  apellidos, 
+  email, 
+  password_hash, 
+  role, 
+  estado_cuenta
+) VALUES (
+  UUID(), 
+  'DUDU', 
+  '', 
+  'msornoza7034@utm.edu.ec',    
+  '$2y$10$Uz8GCOBx5CSgkCw.TRjPYe8pg2pAX3dPMlpHKTzDmTaU0HZItz6LS',          
+  'ADMIN', 
+  'CREADA'
+);
+
 -- 2. Insertar Categorías Base (Para que funcionen los botones del Admin)
 INSERT INTO categorias (id, nombre, descripcion) VALUES 
 (1, 'ROPA', 'Ropa y Accesorios institucionales'),
@@ -277,3 +295,12 @@ INSERT INTO admin_permisos (user_id, modulo) VALUES
 (1, 'usuarios'),
 (1, 'reportes'),
 (1, 'configuracion');
+
+INSERT INTO admin_permisos (user_id, modulo) VALUES 
+(2, 'banners'),
+(2, 'productos'),
+(2, 'contactos'),
+(2, 'compras'),
+(2, 'usuarios'),
+(2, 'reportes'),
+(2, 'configuracion');

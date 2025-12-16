@@ -1,0 +1,86 @@
+/* =========================================
+   ESTILOS CARRUSEL INFINITO
+========================================= */
+
+.categoria-titulo {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin: 40px 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Contenedor principal que oculta el desbordamiento */
+.carrusel-container {
+    width: 100%;
+    overflow: hidden; /* Oculta lo que sale de la pantalla */
+    padding: 20px 0;
+    background: #fff;
+    position: relative;
+}
+
+/* La pista que se mueve */
+.carrusel-track {
+    display: flex;
+    gap: 20px; /* Espacio entre tarjetas */
+    width: max-content; /* El ancho se ajusta al contenido */
+    
+    /* Animación inicial (se controlará mejor con JS si clonamos) 
+       pero definimos la base aquí */
+    animation: scroll 40s linear infinite; 
+}
+
+/* Pausar animación cuando el usuario pasa el mouse para poder hacer clic */
+.carrusel-track:hover {
+    animation-play-state: paused;
+}
+
+/* Definición de la animación */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Se mueve hasta la mitad (donde empieza el clon) */
+    }
+}
+
+/* Ajustes específicos para las tarjetas dentro del carrusel */
+.carrusel-track .producto-card {
+    width: 280px; /* Ancho fijo para que no se deformen */
+    flex-shrink: 0; /* Evita que se encojan */
+    /* Reutilizamos estilos de ropa_accesorio.css, pero aseguramos esto */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #f4f4f4;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Reutilizamos la lógica de imagen de tu archivo ropa_accesorio */
+.carrusel-track .img-container {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrusel-track .img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.5s ease;
+}
+
+/* Zoom al pasar el mouse (funciona junto con la pausa del carrusel) */
+.carrusel-track .producto-card:hover .img-container img {
+    transform: scale(1.1);
+}
