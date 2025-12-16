@@ -2,7 +2,7 @@
 // acciones_carrito.php
 error_reporting(0);
 ini_set('display_errors', 0);
-ob_start();
+ob_start(); // Iniciar buffer para limpiar cualquier salida indeseada
 
 // Cargar sesión
 if (file_exists('bases/config_sesion.php')) {
@@ -23,14 +23,53 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         $accion = $_POST['accion'];
 
-        // 1. AGREGAR (Desde la tienda)
-        if ($accion === 'agregar_producto') {
+        // ==========================================
+        // 1. OBTENER INFO PARA EL MODAL (Para el botón "Añadir" estilo Temu)
+        // ==========================================
+        if ($accion === 'obtener_info_modal') {
+            if (empty($_POST['producto_id'])) throw new Exception("Falta ID.");
+            $pid = $_POST['producto_id'];
+
+            // 1. Datos básicos del producto
+            $stmt = $pdo->prepare("SELECT p.*, f.ruta as foto FROM productos p LEFT JOIN fotos f ON p.id = f.producto_id AND f.es_perfil = 1 WHERE p.id = ?");
+            $stmt->execute([$pid]);
+            $prod = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$prod) throw new Exception("Producto no encontrado.");
+
+            // 2. Variantes (Tallas)
+            $stmtVar = $pdo->prepare("SELECT id, talla, stock FROM variantes WHERE producto_id = ? ORDER BY FIELD(talla, 'S','M','L','XL')");
+            $stmtVar->execute([$pid]);
+            $variantes = $stmtVar->fetchAll(PDO::FETCH_ASSOC);
+
+            // 3. Calcular Stock Real Total (Suma de variantes)
+            $stock_total = 0;
+            if (count($variantes) > 0) {
+                foreach ($variantes as $v) $stock_total += $v['stock'];
+            } else {
+                $stock_total = $prod['stock_total'];
+            }
+
+            $response = [
+                'exito' => true,
+                'producto' => $prod,
+                'variantes' => $variantes,
+                'stock_real' => $stock_total
+            ];
+        }
+
+        // ==========================================
+        // 2. AGREGAR PRODUCTO (Al carrito)
+        // ==========================================
+        elseif ($accion === 'agregar_producto') {
             if (empty($_POST['producto_id'])) throw new Exception("Falta ID.");
             $pid = $_POST['producto_id'];
             $vid = isset($_POST['variante_id']) && $_POST['variante_id'] != '' ? $_POST['variante_id'] : 0;
             $cant = 1;
 
             $stock = obtenerStock($pdo, $pid, $vid);
+            
+            // Definir clave: Si tiene talla es el ID de variante, sino 'pendiente_ID'
             $clave = ($vid != 0) ? $vid : 'pendiente_' . $pid;
             $actual = isset($_SESSION['carrito'][$clave]) ? $_SESSION['carrito'][$clave]['cantidad'] : 0;
 
@@ -40,7 +79,9 @@ try {
             $response = ['exito' => true, 'articulos' => contarTotal(), 'mensaje' => 'Añadido.'];
         }
 
-        // 2. CAMBIAR CANTIDAD (Desde el carrito +, -)
+        // ==========================================
+        // 3. CAMBIAR CANTIDAD (Sumar/Restar en carrito.php)
+        // ==========================================
         elseif ($accion === 'cambiar_cantidad') {
             $clave = $_POST['id'];
             $tipo = $_POST['tipo'];
@@ -49,7 +90,6 @@ try {
             $item = $_SESSION['carrito'][$clave];
 
             if ($tipo === 'sumar') {
-                //  Verificar stock antes de sumar
                 $stock = obtenerStock($pdo, $item['id'], $item['variante_id']);
                 if (($item['cantidad'] + 1) > $stock) {
                     throw new Exception("¡No hay más unidades disponibles!");
@@ -66,7 +106,9 @@ try {
             $response = ['exito' => true, 'articulos' => contarTotal()];
         }
 
-        // 3. ELIMINAR (Desde el carrito X)
+        // ==========================================
+        // 4. ELIMINAR (Borrar item en carrito.php)
+        // ==========================================
         elseif ($accion === 'eliminar') {
             $clave = $_POST['id'];
             if (isset($_SESSION['carrito'][$clave])) {
@@ -81,11 +123,12 @@ try {
     $response = ['exito' => false, 'mensaje' => $e->getMessage()];
 }
 
-ob_end_clean();
+ob_end_clean(); // Limpiar cualquier echo previo
 echo json_encode($response);
 exit;
 
-// --- FUNCIONES ---
+// --- FUNCIONES AUXILIARES ---
+
 function obtenerStock($pdo, $pid, $vid) {
     if ($vid != 0) {
         $s = $pdo->prepare("SELECT stock FROM variantes WHERE id = ?");
